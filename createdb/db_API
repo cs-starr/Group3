@@ -6,7 +6,7 @@ import pymysql
 def genebank():
 
     Information on genes, proteins, accession number, amino acid sequence, dna sequence
-    Output: dictionary of Accession, gene_id, location, dna_seq, aa_seq FROM Gene
+    Output: dictionary of Accession, gene_id, location, dna_seq, aa_seq 
 
 """
     cursorObject        = connectionObject.cursor() 
