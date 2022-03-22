@@ -4,7 +4,10 @@ import re
 import json
 import pandas as pd
 
-
+def getallinfo(genebank_file):
+    """getting relevant information from genebank file. Accession number, location, genes, amino acid sequence, dna sequence
+    """"
+    
 sequence=[]
 chrom_7_data = []
 
@@ -53,3 +56,5 @@ for i in genebank:
 
 #creating dataframa from dictionary
 genebank_df=pd.DataFrame.from_dict(chrom_7_data)
+
+main()
