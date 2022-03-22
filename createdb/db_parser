@@ -57,4 +57,4 @@ for i in genebank:
 #creating dataframa from dictionary
 genebank_df=pd.DataFrame.from_dict(chrom_7_data)
 
-main()
+return(allinfo)
