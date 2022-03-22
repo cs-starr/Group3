@@ -1,0 +1,13 @@
+import pymysql
+import pymysql.cursors
+
+def sqldbconnection():
+# function to establish database connection
+connection = pymysql.connect(host="localhost", 
+                                    port=8889, 
+                                    user="root", 
+                                    passwd="root", 
+                                    database="SELECTION_DB")
+cursor = connection.cursor()
+
+return connection 
