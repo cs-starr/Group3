@@ -5,13 +5,12 @@ import pymysql
 """
 def genebank():
 
-    Information on genes, proteins, sites, and cytogenetic locations required from the database, return will be in a form of dictionaries with the original database column name as key and corresponding data as value.
-    Input: A dictionary with genebank information. 
-    Output: Various dictionaries for each query, e.g. queries with accession number returning all information, queries with gene identifiers for matching locus
+    Information on genes, proteins, accession number, amino acid sequence, dna sequence
+    Output: dictionary of Accession, gene_id, location, dna_seq, aa_seq FROM Gene
 
 """
     cursorObject        = connectionObject.cursor() 
-    sqlquery= 'SELECT Accession, gene_id, location, dna_seq, aa_seq FROM Gene'
+    sqlquery= 'SELECT Accession, gene_id, location, dna_seq, aa_seq'
     cursorObject.execute(sqlQuery)
     rows                = cursorObject.fetchall()
 
@@ -21,3 +20,75 @@ def genebank():
     connection.close()
 
 
+
+def get_proteinid():
+    
+    """gets gene information from database
+       return: Accession, gene_id, location, dna_seq, aa_seq, protein_id
+    """
+    
+   cursorObject        = connectionObject.cursor() 
+    sqlquery= 'SELECT Accession, gene_id, location, dna_seq, aa_seq'
+    cursorObject.execute(sqlQuery)
+    rows                = cursorObject.fetchall()
+
+    for row in rows:
+    yield(row)
+
+    connection.close()
+    
+    
+def get_accessionno():
+    
+    """gets gene information through accession number
+       input:accession number
+       return: Accession, gene_id, location, dna_seq, aa_seq, protein_id
+    """
+    
+   cursorObject        = connectionObject.cursor() 
+    sqlquery= 'SELECT Accession, gene_id, location, dna_seq, aa_seq'
+    cursorObject.execute(sqlQuery)
+    rows                = cursorObject.fetchall()
+
+    for row in rows:
+    yield(row)
+
+    connection.close()
+    
+    
+ def get_proteinaccessionno():
+    
+    """gets protein information through accession number
+       input:accession number
+       return: Accession, gene_id, location, dna_seq, aa_seq, protein_id
+    """
+    
+   cursorObject        = connectionObject.cursor() 
+    sqlquery= 'SELECT Accession, gene_id, location, dna_seq, aa_seq'
+    cursorObject.execute(sqlQuery)
+    rows                = cursorObject.fetchall()
+
+    for row in rows:
+    yield(row)
+
+    connection.close()
+    
+ 
+def get_geneid():
+    
+    """fetch gene information through gene identifier 
+       input:gene_id
+       return: Accession, gene_id, location, dna_seq, aa_seq, protein_id
+    """
+    
+   cursorObject        = connectionObject.cursor() 
+    sqlquery= 'SELECT Accession, gene_id, location, dna_seq, aa_seq'
+    cursorObject.execute(sqlQuery)
+    rows                = cursorObject.fetchall()
+
+    for row in rows:
+    yield(row)
+
+    connection.close()
+    
+    
