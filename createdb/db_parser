@@ -1,0 +1,55 @@
+#!/usr/bin/env python3
+
+import re
+import json
+import pandas as pd
+
+
+sequence=[]
+chrom_7_data = []
+
+with open('chrom_CDS_7', 'r') as f:
+    genebank = f.read().split('//\n')
+
+
+#regex patterns
+accession = re.compile(r'ACCESSION\s+(.+)')#pattern to find accession numbers
+find_location = re.compile(r'map="(.+)')#regex pattern to find all location
+find_gene = re.compile(r'/gene="(.+)') # regex pattern to find all genes
+prt = re.compile(r'product="(.+)')#find products
+find_seq = re.compile(r'translation="([A-Z\s]+)"', re.DOTALL)#find aa_seq
+origin=re.compile(r'ORIGIN(.+)',re.DOTALL,)#find origin
+
+#using re.compile to find matches
+for i in genebank:
+    if 'ACCESSION' in i:
+        accession_number = accession.findall(i)[0]#all findings
+
+    if 'map=' in i:
+        location = find_location.findall(i)[0] # all location findings
+    
+    if '/gene=' in i:
+        gene = find_gene.findall(i)[0]#all findings
+
+    if 'product=' in i:
+        product = prt.findall(i)[0]
+           
+    if  'translation' in i:
+        aa_seq = find_seq.findall(i)[0]#amino acid sequence
+
+    if 'ORIGIN' in i:
+        origin2=origin.findall(i)#findings
+        for x in origin2:
+            origin2=re.compile(r'[a-z]+',re.DOTALL)#finding all lower case letters
+            origin2 = origin2.findall(x)
+            origin2_seq= ''.join(origin2)#joining sequences
+            sequence.append(origin2_seq)
+
+     
+#creating a listwith extracted info
+    info = [gene, accession_number, product, location, aa_seq,sequence]
+    chrom_7_data.append(info)
+
+
+#creating dataframa from dictionary
+genebank_df=pd.DataFrame.from_dict(chrom_7_data)
