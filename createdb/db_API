@@ -1,0 +1,23 @@
+#!/usr/bin/env python3
+
+import pymysql
+
+"""
+def genebank():
+
+    Information on genes, proteins, sites, and cytogenetic locations required from the database, return will be in a form of dictionaries with the original database column name as key and corresponding data as value.
+    Input: A dictionary with genebank information. 
+    Output: Various dictionaries for each query, e.g. queries with accession number returning all information, queries with gene identifiers for matching locus
+
+"""
+    cursorObject        = connectionObject.cursor() 
+    sqlquery= 'SELECT Accession, gene_id, location, dna_seq, aa_seq FROM Gene'
+    cursorObject.execute(sqlQuery)
+    rows                = cursorObject.fetchall()
+
+    for row in rows:
+    yield(row)
+
+    connection.close()
+
+
