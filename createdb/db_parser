@@ -4,7 +4,7 @@ import re
 import json
 import pandas as pd
 
-def getallinfo(genebank_file):
+
     """getting relevant information from genebank file. Accession number, location, genes, amino acid sequence, dna sequence
     """"
     
@@ -23,23 +23,43 @@ prt = re.compile(r'product="(.+)')#find products
 find_seq = re.compile(r'translation="([A-Z\s]+)"', re.DOTALL)#find aa_seq
 origin=re.compile(r'ORIGIN(.+)',re.DOTALL,)#find origin
 
+def get_accession():
 #using re.compile to find matches
 for i in genebank:
     if 'ACCESSION' in i:
         accession_number = accession.findall(i)[0]#all findings
+    return accession
 
+
+def get_location():
+for i in genebank:
     if 'map=' in i:
         location = find_location.findall(i)[0] # all location findings
-    
+    return location
+
+
+def get_gene():
     if '/gene=' in i:
         gene = find_gene.findall(i)[0]#all findings
+    return gene
 
+
+
+def get_prodcut():
     if 'product=' in i:
         product = prt.findall(i)[0]
+    return product
+
+
            
+def get_translation():
     if  'translation' in i:
         aa_seq = find_seq.findall(i)[0]#amino acid sequence
+    return translation
 
+
+
+def get_origin():
     if 'ORIGIN' in i:
         origin2=origin.findall(i)#findings
         for x in origin2:
@@ -47,6 +67,8 @@ for i in genebank:
             origin2 = origin2.findall(x)
             origin2_seq= ''.join(origin2)#joining sequences
             sequence.append(origin2_seq)
+    return origin
+
 
      
 #creating a listwith extracted info
@@ -56,5 +78,3 @@ for i in genebank:
 
 #creating dataframa from dictionary
 genebank_df=pd.DataFrame.from_dict(chrom_7_data)
-
-return(allinfo)
