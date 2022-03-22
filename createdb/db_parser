@@ -14,7 +14,7 @@ chrom_7_data = []
 with open('chrom_CDS_7', 'r') as f:
     genebank = f.read().split('//\n')
 
-
+def extract_info():
 #regex patterns
 accession = re.compile(r'ACCESSION\s+(.+)')#pattern to find accession numbers
 find_location = re.compile(r'map="(.+)')#regex pattern to find all location
@@ -23,7 +23,6 @@ prt = re.compile(r'product="(.+)')#find products
 find_seq = re.compile(r'translation="([A-Z\s]+)"', re.DOTALL)#find aa_seq
 origin=re.compile(r'ORIGIN(.+)',re.DOTALL,)#find origin
 
-def extract_info():
 #using re.compile to find matches
 for i in genebank:
     if 'ACCESSION' in i:
@@ -59,4 +58,4 @@ for i in genebank:
 #creating dataframa from dictionary
 genebank_df=pd.DataFrame.from_dict(chrom_7_data)
 
-return(info)
+main()
