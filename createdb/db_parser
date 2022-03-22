@@ -69,7 +69,8 @@ def get_origin():
             sequence.append(origin2_seq)
     return origin
 
-
+def get_cds():
+    
      
 #creating a listwith extracted info
     info = [gene, accession_number, product, location, aa_seq,sequence]
