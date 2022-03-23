@@ -5,8 +5,11 @@ import pymysql
 """
 def genebank():
 
-    Information on genes, proteins, accession number, amino acid sequence, dna sequence
-    Output: dictionary of Accession, gene_id, location, dna_seq, aa_seq 
+
+    This is a dummy function that returns a list of entries. The real code should
+    return a list of lists and would access the MySQL database
+    """
+
 
 """
     cursorObject        = connectionObject.cursor() 
@@ -24,7 +27,9 @@ def genebank():
 def get_proteinid():
     
     """gets gene information from database
-       return: Accession, gene_id, location, dna_seq, aa_seq, protein_id
+       return: A SQL query returning a summary list of protein product names. Accession, gene_id, location, dna_seq, aa_seq, protein_id
+    
+    
     """
     
    cursorObject        = connectionObject.cursor() 
@@ -40,9 +45,12 @@ def get_proteinid():
     
 def get_accessionno():
     
-    """gets gene information through accession number
+    """
+    gets gene information through accession number
        input:accession number
-       return: Accession, gene_id, location, dna_seq, aa_seq, protein_id
+       return: Returned will be a list containing with corresponding gene information that has an accession code.
+       Gene information will be present in a tuple. 
+    Accession, gene_id, location, dna_seq, aa_seq, protein_id
     """
     
    cursorObject        = connectionObject.cursor() 
@@ -78,7 +86,7 @@ def get_geneid():
     
     """fetch gene information through gene identifier 
        input:gene_id
-       return: Accession, gene_id, location, dna_seq, aa_seq, protein_id
+       return: SQL query returning a list of gene, Accession, gene_id, location, dna_seq, aa_seq, protein_id
     """
     
    cursorObject        = connectionObject.cursor() 
