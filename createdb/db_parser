@@ -54,6 +54,8 @@ for i in genebank:
     info = [gene, accession_number, product, location, aa_seq,sequence]
     chrom_7_data.append(info)
 
+#dataframe
+genebank_df = pd.DataFrame(chrom_7_data)
 
 #creating a new txt output file with extracted info
 with open('chrom7_extracted_data.txt', 'w') as f:
