@@ -2,6 +2,7 @@
 
 import pymysql
 import pymysql.cursors
+import mysql.connector
 
 def sqldbconnection():
 # function to establish database connection
