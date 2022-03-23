@@ -21,7 +21,36 @@ def all_genebank():
     yield(row)
 
     connection.close()
+    
+    """""""""
+def getgeneentries(gene):
 
+    Input:gene
+    Output:Returns a dictionary for a specific gene.
+    """
+      cursorObject        = connectionObject.cursor() 
+    sqlquery= 'SELECT gene.accession, gene.cds '
+    cursorObject.execute(sqlQuery)
+    rows                = cursorObject.fetchall()
+
+    for row in rows:
+    yield(row)
+
+    connection.close()
+
+def sequence(accession):
+
+
+    Output: Returns the sequence (dictionary) for an accession.
+    """
+    
+     cursorObject        = connectionObject.cursor() 
+    sqlquery= """SELECT accession, sequence
+    cursorObject.execute(sqlQuery)
+    rows                = cursorObject.fetchall()
+
+    for row in rows:
+    yield(row)
 
 
 def get_proteinnames():
