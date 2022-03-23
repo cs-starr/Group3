@@ -6,11 +6,11 @@ import mysql.connector
 
 def sqldbconnection():
 # function to establish database connection
-connection = pymysql.connect(host="localhost", 
+connection = pymysql.connect(dbhost="gj001", 
                                     port=8889, 
-                                    user="root", 
-                                    passwd="root", 
-                                    database="SELECTION_DB")
+                                    dbuser="gj001", 
+                                    dbpass="gj001", 
+                                    dbname="pandora")
 cursor = connection.cursor()
 
 return connection 
