@@ -3,7 +3,7 @@
 import pymysql
 
 """
-def genebank():
+def all_genebank():
 
 
     This is a dummy function that returns a list of entries. The real code should
@@ -24,7 +24,7 @@ def genebank():
 
 
 
-def get_proteinid():
+def get_proteinnames():
     
     """gets gene information from database
        return: A SQL query returning a summary list of protein product names. Accession, gene_id, location, dna_seq, aa_seq, protein_id
@@ -33,7 +33,7 @@ def get_proteinid():
     """
     
    cursorObject        = connectionObject.cursor() 
-    sqlquery= 'SELECT Accession, gene_id, location, dna_seq, aa_seq'
+    sqlquery= 'SELECT DISTINCT product \
     cursorObject.execute(sqlQuery)
     rows                = cursorObject.fetchall()
 
@@ -48,13 +48,11 @@ def get_accessionno():
     """
     gets gene information through accession number
        input:accession number
-       return: Returned will be a list containing with corresponding gene information that has an accession code.
-       Gene information will be present in a tuple. 
-    Accession, gene_id, location, dna_seq, aa_seq, protein_id
+       return: Returned will be a list of accession numbers.
     """
     
    cursorObject        = connectionObject.cursor() 
-    sqlquery= 'SELECT Accession, gene_id, location, dna_seq, aa_seq'
+    sqlquery= 'SELECT Accession'
     cursorObject.execute(sqlQuery)
     rows                = cursorObject.fetchall()
 
@@ -64,15 +62,14 @@ def get_accessionno():
     connection.close()
     
     
- def get_proteinaccessionno():
+ def get_chrom_loc():
     
-    """gets protein information through accession number
-       input:accession number
-       return: Accession, gene_id, location, dna_seq, aa_seq, protein_id
+   """
+    SQL query returning a list of chromosomal locations
     """
     
    cursorObject        = connectionObject.cursor() 
-    sqlquery= 'SELECT Accession, gene_id, location, dna_seq, aa_seq'
+    sqlquery= 'SELECT Accession, location'
     cursorObject.execute(sqlQuery)
     rows                = cursorObject.fetchall()
 
@@ -86,16 +83,31 @@ def get_geneid():
     
     """fetch gene information through gene identifier 
        input:gene_id
-       return: SQL query returning a list of gene, Accession, gene_id, location, dna_seq, aa_seq, protein_id
+       return: SQL query returning a list of genes.
     """
     
    cursorObject        = connectionObject.cursor() 
-    sqlquery= 'SELECT Accession, gene_id, location, dna_seq, aa_seq'
+    sqlquery= 'SELECT Accession, gene_id, '
     cursorObject.execute(sqlQuery)
     rows                = cursorObject.fetchall()
 
     for row in rows:
     yield(row)
+    
+
+
+def get_CDS():
+    """
+    Output:Returns a list of CDS records and would access the MySQL database
+    """
+   cursorObject        = connectionObject.cursor() 
+    sqlquery= 'SELECT Accession, gene_id, '
+    cursorObject.execute(sqlQuery)
+    rows                = cursorObject.fetchall()
+
+    for row in rows:
+    yield(row)
+    
 
     connection.close()
     
