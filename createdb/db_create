@@ -1,0 +1,4 @@
+import dbconnection
+
+CREATE SCHEMA IF NOT EXISTS `chrom_7` DEFAULT CHARACTER SET utf8 ;
+USE `chrom_7` ;
