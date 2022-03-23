@@ -58,4 +58,8 @@ for i in genebank:
 #creating dataframa from dictionary
 genebank_df=pd.DataFrame.from_dict(chrom_7_data)
 
+#creating a new txt file with extracted info
+with open('chrom7_extracted_data.txt', 'w') as f:
+    for item in chrom_7_data:
+        f.write("%s\n" % item)
 main()
