@@ -27,8 +27,7 @@ def all_genebank():
     """""""""
 def getgeneentries(gene):
 
-    Input:gene
-    Output:Returns a dictionary for a specific gene.
+  
     """
       cursorObject        = connectionObject.cursor() 
     sqlquery= 'SELECT gene.accession, gene.cds '
@@ -39,11 +38,14 @@ def getgeneentries(gene):
     yield(row)
 
     connection.close()
+    
+      Input:gene
+    Output:Returns a dictionary for a specific gene.
+    
+    return[("gene_id","accession_code","product","location","Translation","dna_seq")]
 
 def sequence(accession):
-
-
-    Output: Returns the sequence (dictionary) for an accession.
+     
     """
     
      cursorObject        = connectionObject.cursor() 
@@ -54,11 +56,14 @@ def sequence(accession):
     for row in rows:
     yield(row)
 
+     return[("gene_id","accession","protein id","location","translation","dna seq")]
 
 def get_proteinnames():
     
-    """gets gene information from database
-       return: A SQL query returning a summary list of protein product names. Accession, gene_id, location, dna_seq, aa_seq, protein_id
+    """
+    gets gene information from database
+    return: A SQL query returning a summary list of protein product names. 
+    return[("gene_id","accession","protein id","location","translation","dna seq")]
     
     
     """
