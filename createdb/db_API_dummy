@@ -22,6 +22,8 @@ def all_genebank():
 
     connection.close()
     
+    return[('accession_number', 'gene_id', 'protein name','chromosomal location')]
+    
     """""""""
 def getgeneentries(gene):
 
