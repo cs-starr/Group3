@@ -112,5 +112,3 @@ for i in genebank:
 
     finally:
         connection.close()
-
-main()
