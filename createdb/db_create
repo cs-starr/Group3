@@ -19,13 +19,57 @@ finally:
     
 
 
-cursor.execute("CREATE TABLE IF NOT EXISTS GENE(\
-                accession      VARCHAR(100)     NOT NULL,\
-                 gene     VARCHAR(80)     NOT NULL,\
-                 product      VARCHAR(80)     NOT NULL,\
-                 location      VARCHAR(80)     NOT NULL,\
-                 PRIMARY KEY (accession))"
-               )
+GENEsummary = "CREATE TABLE IF NOT EXISTS GENE
+                (
+                    accession      VARCHAR(100)     NOT NULL,\
+                    gene     VARCHAR(80)     NOT NULL,\
+                    product      VARCHAR(80)     NOT NULL,\
+                    location      VARCHAR(80)     NOT NULL,\
+                    PRIMARY KEY (accession))
+                 )"
+       
+DNAsummary ='''CREATE TABLE IF NOT EXISTS ORIGINS
+				    (   accession      VARCHAR(100)     NOT NULL,
+    					sequence      LONGTEXT     NOT NULL,
+    					PRIMARY KEY (accession),
+                                        FOREIGN KEY (accession)
+                                            REFERENCES GENE (accession)
+                                            ON DELETE CASCADE
+                                            ON UPDATE RESTRICT
+    					
+				    )ENGINE=InnoDB;'''
+
+
+
+        
+# Create a tables
+connection = pymysql.connect(cf.mysql["host"],
+                             cf.mysql["user"],
+                             cf.mysql["password"],
+                             cf.mysql["db"],
+                             cursorclass=pymysql.cursors.DictCursor)
+
+
+
+try:
+    with connection.cursor() as cursor:
+        
+        cursor.execute('DROP TABLE IF EXISTS ORIGINS')
+        cursor.execute('DROP TABLE IF EXISTS CDS')
+        cursor.execute('DROP TABLE IF EXISTS LOCUS')
+        cursor.execute('DROP TABLE IF EXISTS GENE')
+        
+        cursor.execute(GENEsummary)
+        cursor.execute(DNAsummary)
+
+        connection.commit()
+
+
+finally:
+    connection.close() 
+
+    
+    
 
 
 
