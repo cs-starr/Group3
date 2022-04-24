@@ -1,0 +1,156 @@
+#!/usr/bin/env python3
+
+import pymysql
+import sys
+sys.path.insert(0, "../../")
+
+import config as cf  
+import pymysql.cursors
+import re
+
+
+"""
+def all_genebank():
+
+
+    Query accessing MySQL database to return gene information.
+    """
+
+
+"""
+    cursorObject        = connectionObject.cursor() 
+    sqlquery= 'SELECT Accession, gene_id, location, dna_seq, aa_seq'
+    cursorObject.execute(sqlquery)
+    rows                = cursorObject.fetchall()
+
+    for row in rows:
+    yield(row)
+
+    connection.close()
+    
+    return[('accession_number', 'gene_id', 'protein name','chromosomal location')]
+    
+    """""""""
+def getgeneentries(gene):
+
+  
+    """
+      cursorObject        = connectionObject.cursor() 
+    sqlquery= 'SELECT gene.accession, gene.cds '
+    cursorObject.execute(sqlQuery)
+    rows                = cursorObject.fetchall()
+
+    for row in rows:
+    yield(row)
+
+    connection.close()
+    
+      Input:gene
+    Output:Returns a dictionary for a specific gene.
+    
+    return[("gene_id","accession_code","product","location","Translation","dna_seq")]
+
+def sequence(accession):
+     
+    """
+    
+     cursorObject        = connectionObject.cursor() 
+    sqlquery= """SELECT accession, sequence
+    cursorObject.execute(sqlQuery)
+    rows                = cursorObject.fetchall()
+
+    for row in rows:
+    yield(row)
+
+     return[("gene_id","accession","protein id","location","translation","dna seq")]
+
+def get_proteinnames():
+    
+    """
+    gets gene information from database
+    return: A SQL query returning a summary list of protein product names. 
+    return[("gene_id","accession","protein id","location","translation","dna seq")]
+    
+    
+    """
+    
+   cursorObject        = connectionObject.cursor() 
+    sqlquery= 'SELECT DISTINCT product \
+    cursorObject.execute(sqlQuery)
+    rows                = cursorObject.fetchall()
+
+    for row in rows:
+    yield(row)
+
+    connection.close()
+    
+    
+def get_accessionno():
+    
+    """
+    gets gene information through accession number
+       input:accession number
+       return: Returned will be a list of accession numbers.
+    """
+    
+   cursorObject        = connectionObject.cursor() 
+    sqlquery= 'SELECT Accession'
+    cursorObject.execute(sqlQuery)
+    rows                = cursorObject.fetchall()
+
+    for row in rows:
+    yield(row)
+
+    connection.close()
+    
+    
+ def get_chrom_loc():
+    
+   """
+    SQL query returning a list of chromosomal locations
+    """
+    
+   cursorObject        = connectionObject.cursor() 
+    sqlquery= 'SELECT Accession, location'
+    cursorObject.execute(sqlQuery)
+    rows                = cursorObject.fetchall()
+
+    for row in rows:
+    yield(row)
+
+    connection.close()
+    
+ 
+def get_geneid():
+    
+    """fetch gene information through gene identifier 
+       input:gene_id
+       return: SQL query returning a list of genes.
+    """
+    
+   cursorObject        = connectionObject.cursor() 
+    sqlquery= 'SELECT Accession, gene_id, '
+    cursorObject.execute(sqlQuery)
+    rows                = cursorObject.fetchall()
+
+    for row in rows:
+    yield(row)
+    
+
+
+def get_CDS():
+    """
+    Output:Returns a list of CDS records and would access the MySQL database
+    """
+   cursorObject        = connectionObject.cursor() 
+    sqlquery= 'SELECT Accession, gene_id, '
+    cursorObject.execute(sqlQuery)
+    rows                = cursorObject.fetchall()
+
+    for row in rows:
+    yield(row)
+    
+
+    connection.close()
+    
+    
