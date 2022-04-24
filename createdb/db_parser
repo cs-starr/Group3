@@ -3,6 +3,7 @@
 import re
 import json
 import config as cf
+import pymysql.cursors
 
 
     """getting relevant information from genebank file. Accession number, location, genes, amino acid sequence, dna sequence
