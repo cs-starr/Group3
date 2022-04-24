@@ -15,6 +15,7 @@ with open('chrom_CDS_7', 'r') as f:
     genebank = f.read().split('//\n')
 
 def extract_info():
+
 #regex patterns
 accession = re.compile(r'ACCESSION\s+(.+)')#pattern to find accession numbers
 find_location = re.compile(r'map="(.+)')#regex pattern to find all location
@@ -22,45 +23,64 @@ find_gene = re.compile(r'/gene="(.+)') # regex pattern to find all genes
 prt = re.compile(r'product="(.+)')#find products
 find_seq = re.compile(r'translation="([A-Z\s]+)"', re.DOTALL)#find aa_seq
 origin=re.compile(r'ORIGIN(.+)',re.DOTALL,)#find origin
+c = re.compile(r'(?<=CDS)(((?:.*|.|\n)*))(?=\s+\/gene|\s+\/codon)')
+p=re.compile(r'protein_id="(.+)')
 
 #using re.compile to find matches
+#using re.compile to find matches
 for i in genebank:
-    if 'ACCESSION' in i:
+
+    if 'CDS' in i:
+        cds=c.findall(i)[0]
+
+    if 'accession' in i:
         accession_number = accession.findall(i)[0]#all findings
 
 
-for i in genebank:
     if 'map=' in i:
         location = find_location.findall(i)[0] # all location findings
 
+    
     if '/gene=' in i:
         gene = find_gene.findall(i)[0]#all findings
 
+   
+
     if 'product=' in i:
         product = prt.findall(i)[0]
-    
+
+           
     if  'translation' in i:
-        aa_seq = find_seq.findall(i)[0]#amino acid sequence
+        aa_seq = find_seq.findall(i)[0]
+
+
 
     if 'ORIGIN' in i:
         origin2=origin.findall(i)#findings
+
         for x in origin2:
             origin2=re.compile(r'[a-z]+',re.DOTALL)#finding all lower case letters
             origin2 = origin2.findall(x)
             origin2_seq= ''.join(origin2)#joining sequences
             sequence.append(origin2_seq)
+            
 
-#creating a listwith extracted info
-    info = [gene, accession_number, product, location, aa_seq,sequence]
-    chrom_7_data.append(info)
+    if 'protein_id' in i:
+        protein_id= p.findall(i)[0].strip('"')
+        
+ 
+    #creating four summary tables   
+    #populate tables
 
-#dataframe
-genebank_df = pd.DataFrame(chrom_7_data)
+    summary = "INSERT INTO GENE(accession, version, source, definition) VALUES(%s, %s, %s, %s)"
+    summaryvalues = (accession, gene, product, location)
 
-#creating a new txt output file with extracted info
-with open('chrom7_extracted_data.txt', 'w') as f:
-    for item in chrom_7_data:
-        f.write("%s\n" % item)
+
+    cds = "INSERT INTO CDS(accession, sequence) VALUES(%s, %s)"
+    cdsvalues = (gene,product,protein_id,location,aa_seq,accession)
+
+    dna = "INSERT INTO DNA(accession,sequence)VALUES(%s, %s)"
+    dnavalues = (accession,sequence) 
 
 
 main()
