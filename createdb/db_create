@@ -4,11 +4,11 @@
 import sys
 sys.path.insert(0, "..")
 import db_parser
-import config as cfg
+import config as cf
 import pymysql.cursors
 
 
-connect = pymysql.connect(host='pandora' ,db='gj001', user='gj001' , password='gj001')
+connection = pymysql.connect(cf.mysql["host"], cf.mysql["user"], cf.mysql["password"])
 
 try:
     with connection.cursor() as cursor:
