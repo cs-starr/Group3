@@ -3,7 +3,7 @@
 mysql = {
     "host": "pandora",
     "user": "gj001",
-    "passwd": "gj001",
+    "password": "gj001",
     "db": "gj001",
 }
 
