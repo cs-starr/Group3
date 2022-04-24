@@ -4,6 +4,7 @@ import re
 import json
 import config as cf
 import pymysql.cursors
+import sys
 
 
     """getting relevant information from genebank file. Accession number, location, genes, amino acid sequence, dna sequence
@@ -70,7 +71,7 @@ for i in genebank:
         protein_id= p.findall(i)[0].strip('"')#protein ids for each entry
         
  
-    #creating four summary tables   
+    #creating summary tables   
     #populate tables
 
     summary = "INSERT INTO GENE(accession, version, source, definition) VALUES(%s, %s, %s, %s)"
