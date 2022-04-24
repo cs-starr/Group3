@@ -3,16 +3,21 @@
 
 import sys
 sys.path.insert(0, "..")
-import gene_parser
+import db_parser
 import config as cfg
 import pymysql.cursors
 
-def connectDB():
-    connect = pymysql.connect(host='pandora' ,db='gj001', user='gj001' , password='gj001')
-    curs = connect.cursor()
-    return curs
+
+connect = pymysql.connect(host='pandora' ,db='gj001', user='gj001' , password='gj001')
+
+try:
+    with connection.cursor() as cursor:
+        cursor.execute('CREATE DATABASE IF NOT EXISTS gj001')    
+ 
+finally:
+    connection.close()
     
-cursor = connectDB()
+
 
 cursor.execute("CREATE TABLE IF NOT EXISTS GENE(\
                 accession      VARCHAR(100)     NOT NULL,\
@@ -24,58 +29,7 @@ cursor.execute("CREATE TABLE IF NOT EXISTS GENE(\
 
 
 
-cursor.execute("CREATE TABLE IF NOT EXISTS CDS\
-(       gene        VARCHAR(80)     NOT NULL,\
-    	product     VARCHAR(80)     NOT NULL,\
-    	protein_id  VARCHAR(80)     NOT NULL,\
-    	start_stop  TEXT     NOT NULL,\
-    	chrom_loc VARCHAR(80)        NOT NULL,\
-    	translation TEXT     NOT NULL,\
-    	accession      VARCHAR(100)     NOT NULL,\
-    	PRIMARY KEY (gene, protein_id),\
-        FOREIGN KEY (accession)\
-        REFERENCES GENE (accession)\
-        ON DELETE CASCADE
-        ON UPDATE RESTRICT\
-)ENGINE=InnoDB;
 
 
-cursor.execute("CREATE TABLE IF NOT EXISTS DNA\
-(       accession      VARCHAR(80)     NOT NULL,\
-        sequence      LONGTEXT     NOT NULL,\
-        PRIMARY KEY (accession),\
-        FOREIGN KEY (accession)\
-        REFERENCES GENE (accession)\
-        ON DELETE CASCADE\
-        ON UPDATE RESTRICT\  					
-)ENGINE=InnoDB;
-               )
-
-# Create a tables
-
-connection = pymysql.connect(cfg.mysql["host"],
-                             cfg.mysql["user"],
-                             cfg.mysql["passwd"],
-                             cfg.mysql["db"],
-                             cursorclass=pymysql.cursors.DictCursor)
- 
-try:
-    with connection.cursor() as cursor:
-        
-        cursor.execute('DROP TABLE IF EXISTS ORIGINS')
-        cursor.execute('DROP TABLE IF EXISTS CDS')
-        cursor.execute('DROP TABLE IF EXISTS LOCUS')
-        cursor.execute('DROP TABLE IF EXISTS GENE')
-        
-        cursor.execute(summary)
-        cursor.execute(CDS)
-        cursor.execute(DNA)
-
-
-        connection.commit()
-
-
-finally:
-    connection.close()
 
 
