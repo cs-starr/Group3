@@ -31,10 +31,10 @@ p=re.compile(r'protein_id="(.+)')
 for i in genebank:
 
     if 'CDS' in i:
-        cds=c.findall(i)[0]
+        cds=c.findall(i)[0]#find all cds values
 
     if 'accession' in i:
-        accession_number = accession.findall(i)[0]#all findings
+        accession_number = accession.findall(i)[0]#all accession numbers
 
 
     if 'map=' in i:
@@ -42,21 +42,21 @@ for i in genebank:
 
     
     if '/gene=' in i:
-        gene = find_gene.findall(i)[0]#all findings
+        gene = find_gene.findall(i)[0]#all geneids
 
    
 
     if 'product=' in i:
-        product = prt.findall(i)[0]
+        product = prt.findall(i)[0]#all product numbers
 
            
     if  'translation' in i:
-        aa_seq = find_seq.findall(i)[0]
+        aa_seq = find_seq.findall(i)[0]#amino acid sequences for each entry
 
 
 
     if 'ORIGIN' in i:
-        origin2=origin.findall(i)#findings
+        origin2=origin.findall(i)#findng origin for each entry
 
         for x in origin2:
             origin2=re.compile(r'[a-z]+',re.DOTALL)#finding all lower case letters
@@ -66,7 +66,7 @@ for i in genebank:
             
 
     if 'protein_id' in i:
-        protein_id= p.findall(i)[0].strip('"')
+        protein_id= p.findall(i)[0].strip('"')#protein ids for each entry
         
  
     #creating four summary tables   
