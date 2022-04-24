@@ -14,7 +14,7 @@ def connectDB():
     
 cursor = connectDB()
 
-cursor.execute("CREATE TABLE IF NOT EXISTS summary(\
+cursor.execute("CREATE TABLE IF NOT EXISTS GENE(\
                 accession      VARCHAR(100)     NOT NULL,\
                  gene     VARCHAR(80)     NOT NULL,\
                  product      VARCHAR(80)     NOT NULL,\
@@ -51,16 +51,6 @@ cursor.execute("CREATE TABLE IF NOT EXISTS DNA\
 )ENGINE=InnoDB;
                )
 
-cursor.execute("CREATE TABLE IF NOT EXISTS DNA\
-(       accession      VARCHAR(80)     NOT NULL,\
-        sequence      LONGTEXT     NOT NULL,\
-        PRIMARY KEY (accession),\
-        FOREIGN KEY (accession)\
-        REFERENCES GENE (accession)\
-        ON DELETE CASCADE\
-        ON UPDATE RESTRICT\  					
-)ENGINE=InnoDB;
-               )
 # Create a tables
 
 connection = pymysql.connect(cfg.mysql["host"],
