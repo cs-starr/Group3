@@ -2,7 +2,7 @@
 
 import re
 import json
-import pandas as pd
+import config as cf
 
 
     """getting relevant information from genebank file. Accession number, location, genes, amino acid sequence, dna sequence
@@ -76,11 +76,30 @@ for i in genebank:
     summaryvalues = (accession, gene, product, location)
 
 
-    cds = "INSERT INTO CDS(accession, sequence) VALUES(%s, %s)"
+    cdssummary = "INSERT INTO CDS(accession, sequence) VALUES(%s, %s)"
     cdsvalues = (gene,product,protein_id,location,aa_seq,accession)
 
-    dna = "INSERT INTO DNA(accession,sequence)VALUES(%s, %s)"
+    dnasummary = "INSERT INTO DNA(accession,sequence)VALUES(%s, %s)"
     dnavalues = (accession,sequence) 
+    
 
+    try:
+        
+        ## create database connection
+        connection = pymysql.connect(cf.mysql["host"],
+                                     cf.mysql["user"],
+                                     cf.mysql["password"],
+                                     cf.mysql["db"],
+                                     cursorclass=pymysql.cursors.DictCursor)
+        with connection.cursor() as cursor:
+
+             cursor.execute(summary, summaryvalues)
+             cursor.execute(cdssummary, cdsalues)
+             cursor.execute(dnasummary, dnavalues)
+
+             connection.commit()
+
+    finally:
+        connection.close()
 
 main()
