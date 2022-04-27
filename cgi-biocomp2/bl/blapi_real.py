@@ -1,5 +1,16 @@
+#!/usr/bin/python3
+"""
+...Comment header goes here...
+This is the business logic API
+"""
 
+# Add the bl sub-directory to the module path (for testing this routine)
+# and the directory above to import the config file
+import sys
+sys.path.insert(0, "../db/")
+sys.path.insert(0, "../")
 
+import dbapi   # Import the database api
 
 def codon_useage(seq_input):
     from collections import Counter
