@@ -17,44 +17,122 @@ def getAllEntries():
     This function is designed to be called by the frontend when a list of gene
     identifiers alone is required.
     
-    This function calls the DB API function and returns the output directly.
+    Returns
+    -------
+    
 
     """    
     return(db_api.all_genebank())
 
-def calc_exons():
+def calc_exons(dna_seq, exon_locations, comp_strand, codon_start):
     """
     This function calculates the exons
-    
-    The function returns the coding regions of DNA, as a string
+    dna_seq - string
+    exon_location - list of tuples
+    comp_string - boolean
+    codon_start - int
     """
     
+    temp_exon_store = []
+    for (start,stop) in exon_locations:
+       temp_exon_store.append(ex_dna_seq[start:stop])
+    working_exon_string = "".join(temp_exon_store)
+    
+    trim = (codon_start - 1)*3
+    final_exon_str = ""
+    
+    if comp_strand == 1:
+        rev_ex_str = working_exon_string[::-1]
+        rev_list = []
+        final_exon_str = ""
+        for i in rev_ex_str:
+            if i == "c":
+                s = "g"
+            if i == "g":
+                s = "c"
+            if i == "a":
+                s = "t"
+            if i == "t":
+                s = "a"
+            rev_list.append(s)
+        final_exon_str = "".join(rev_list)
+    else:
+            final_exon_str = working_exon_string
+            
+    final_exon_str = final_exon_str[trim:]
+    
+    return(final_exon_str)
+
+def renzyme_activity():
     """
-    Need to be able to work on the complementary strand
+    This function searches a genetic sequence for restriction enzyme activity
+    Inputs
+    genetic sequence in string format
+    restriction enzyme - EcoR1, BamH1, BsuM1
+
+    Returns
+    -------
+    Restriction enzyme activity, location
     """
+
+def runAllcodon_use():
+    """
+    This function is a one time run event.  To calculate all coding regions within the database
+    and to calculate
+
+    Returns
+    -------
+    Writes data into a text file. (name TBD)
+    (Need to include - date/time of calculation)
+    """
+    return("into a text file")
+
+def getAllcodon_use():
+    """
+    This function allows the web frontend to access the pre-calculated - all codon use file
+
+    Returns
+    -------
+    None.
+    """
+    return("textfile.txt")
     
 def frontend_input(request):
+    """
+    This function takes a x item tuple or list of format:
+        (searchfield, data_type, codon_useage)
+        searchfield - string object
+        data_type - string object
+        codon_useage - boolean (True/False)
+    Returns
+    -------
+    
+    """
     searchfield = request[0]
     data_type = request[1]
     codon_flag = request[2]
+    
     
     temp_data=[]
     if data_type == "gene_id":
        temp_data = ["db_gene_id", "db_accession_code", "db_product", 
                     "db_location", "db_translation", "db_dna_seq"]
-       """"temp_data = dbapi.getgeneetries(searchfield)"""
+       """"temp_data = db_api.getgeneetries(searchfield)"""
     if data_type == "gen_acc":
-          temp_data = "accessionn success"
-           
+        temp_data = "accessionn success"
+        """"temp_data = db_api.sequence(searchfield)"""
     if data_type == "prot_prod":
-          temp_data = "protein success"
+        temp_data = "protein success"
            
     if data_type == "chro_loc":
-          temp_data = ("tuple1", "tuple2")
+        temp_data = ("tuple1", "tuple2")
           
-       dna_seq = temp_data[5]
+    dna_seq = temp_data[5]
+    exon_locations = ()
+    comp_strand_flag =""
+    coding_regions = ()
           
-    if codon_flag ==1:
+    if codon_flag == 1:
         codon_useage("dummy input")
     
     """
