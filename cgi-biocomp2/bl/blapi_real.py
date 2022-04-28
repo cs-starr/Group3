@@ -26,16 +26,20 @@ def getAllEntries():
 
 def calc_exons(dna_seq, exon_locations, comp_strand, codon_start):
     """
-    This function calculates the exons
-    dna_seq - string
-    exon_location - list of tuples
-    comp_string - boolean
-    codon_start - int
+    This function calculates the exons from inputs:
+        dna_seq - string
+        exon_location - list of tuples of exon (start,stop) locations
+        comp_string - boolean
+        codon_start - int
+    
+    Returns
+    -------
+    Coding DNA, as a string
     """
     
     temp_exon_store = []
     for (start,stop) in exon_locations:
-       temp_exon_store.append(ex_dna_seq[start:stop])
+       temp_exon_store.append(dna_seq[start:stop])
     working_exon_string = "".join(temp_exon_store)
     
     trim = (codon_start - 1)*3
