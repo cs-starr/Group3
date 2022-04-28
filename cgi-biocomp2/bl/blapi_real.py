@@ -12,6 +12,56 @@ sys.path.insert(0, "../")
 
 import dbapi   # Import the database api
 
+def getAllEntries():
+    """
+    This function is designed to be called by the frontend when a list of gene
+    identifiers alone is required.
+    
+    This function calls the DB API function and returns the output directly.
+
+    """    
+    return(db_api.all_genebank())
+
+def calc_exons():
+    """
+    This function calculates the exons
+    
+    The function returns the coding regions of DNA, as a string
+    """
+    
+    """
+    Need to be able to work on the complementary strand
+    """
+    
+def frontend_input(request):
+    searchfield = request[0]
+    data_type = request[1]
+    codon_flag = request[2]
+    
+    temp_data=[]
+    if data_type == "gene_id":
+       temp_data = ["db_gene_id", "db_accession_code", "db_product", 
+                    "db_location", "db_translation", "db_dna_seq"]
+       """"temp_data = dbapi.getgeneetries(searchfield)"""
+    if data_type == "gen_acc":
+          temp_data = "accessionn success"
+           
+    if data_type == "prot_prod":
+          temp_data = "protein success"
+           
+    if data_type == "chro_loc":
+          temp_data = ("tuple1", "tuple2")
+          
+       dna_seq = temp_data[5]
+          
+    if codon_flag ==1:
+        codon_useage("dummy input")
+    
+    """
+    Storage
+    """
+    return("variables to be returned")
+
 def codon_useage(seq_input):
     from collections import Counter
     import re
