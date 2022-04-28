@@ -39,9 +39,17 @@ def calc_exons(dna_seq, exon_locations, comp_strand, codon_start):
     
     temp_exon_store = []
     for (start,stop) in exon_locations:
-       temp_exon_store.append(dna_seq[start:stop])
+        if start[0] == "<" or start[0] == ">":
+            start = int(start[1:])
+        else:
+            start = int(start)
+        if stop[0] == "<" or stop[0] == ">":
+            stop = int(stop[1:])
+        else:
+            stop = int(stop)
+        temp_exon_store.append(ex_dna_seq[start:stop])
     working_exon_string = "".join(temp_exon_store)
-    
+
     trim = (codon_start - 1)*3
     final_exon_str = ""
     
@@ -61,7 +69,7 @@ def calc_exons(dna_seq, exon_locations, comp_strand, codon_start):
             rev_list.append(s)
         final_exon_str = "".join(rev_list)
     else:
-            final_exon_str = working_exon_string
+        final_exon_str = working_exon_string
             
     final_exon_str = final_exon_str[trim:]
     
