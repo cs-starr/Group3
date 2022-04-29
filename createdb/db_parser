@@ -94,11 +94,11 @@ for i in genebank:
     summaryvalues = (accession, gene, product, location)
 
 
-    cdssummary = "INSERT INTO CDS(accession, sequence) VALUES(%s, %s)"
-    cdsvalues = (gene,product,protein_id,location,aa_seq,accession)
+    cdssummary = "INSERT INTO CDS(gene,product,location,accession,cds) VALUES(%s, %s, %s, %s, %s)"
+    cdsvalues = (gene,product,location,accession,cds)
 
-    dnasummary = "INSERT INTO DNA(accession,sequence)VALUES(%s, %s)"
-    dnavalues = (accession,sequence) 
+    dnasummary = "INSERT INTO DNA(accession,sequence, aa_seq, protein_id)VALUES(%s, %s, %s, %s)"
+    dnavalues = (accession,sequence,aa_seq, protein_id) 
     
 
     try:
