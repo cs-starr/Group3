@@ -34,7 +34,7 @@ find_gene = re.compile(r'/gene="(.+)') # regex pattern to find all genes
 prt = re.compile(r'product="(.+)')#find products
 find_seq = re.compile(r'translation="([A-Z\s]+)"', re.DOTALL)#find aa_seq
 origin=re.compile(r'ORIGIN(.+)',re.DOTALL,)#find origin
-c = re.compile(r'(?<=CDS)(((?:.*|.|\n)*))(?=\s+\/gene|\s+\/codon)')
+c = re.compile(r'(?<=CDS)(((?:.*|.|\n)*))(?=\s+\/gene|\s+\/codon)')#finding cds within genebank file
 p=re.compile(r'protein_id="(.+)')
 
 #using re.compile to find matches
@@ -43,12 +43,12 @@ for i in genebank:
 
     if 'CDS' in i:
         cds=c.findall(i)[0]#find all cds values
-        cds = [cds.replace('<', '') for cds in cds]
-        cds = [cds.replace('>', '') for cds in cds]
-        cds = [cds.replace(')', '') for cds in cds]
-        cds = [cds.replace('\n', '') for cds in cds]
-        cds = [cds.replace(' ', '') for cds in cds]
-        cds = [cds.replace(',', ';') for cds in cds]
+        cds = [cds.replace('<', '') for cds in cds]#removing <
+        cds = [cds.replace('>', '') for cds in cds]#removing >
+        cds = [cds.replace(')', '') for cds in cds]#removing )
+        cds = [cds.replace('\n', '') for cds in cds]#removing \n
+        cds = [cds.replace(' ', '') for cds in cds]#removing space
+        cds = [cds.replace(',', ';') for cds in cds]#replacing , to ;
 
 
     if 'accession' in i:
