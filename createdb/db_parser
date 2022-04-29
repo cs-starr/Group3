@@ -43,6 +43,13 @@ for i in genebank:
 
     if 'CDS' in i:
         cds=c.findall(i)[0]#find all cds values
+        cds = [cds.replace('<', '') for cds in cds]
+        cds = [cds.replace('>', '') for cds in cds]
+        cds = [cds.replace(')', '') for cds in cds]
+        cds = [cds.replace('\n', '') for cds in cds]
+        cds = [cds.replace(' ', '') for cds in cds]
+        cds = [cds.replace(',', ';') for cds in cds]
+        all_cds.append(cds)
 
     if 'accession' in i:
         accession_number = accession.findall(i)[0]#all accession numbers
