@@ -70,42 +70,77 @@ def calc_exons(dna_seq, exon_locations, comp_strand, codon_start):
     
     return(final_exon_str)
 
-def rest_enzyme_activity(dna_seq, rest_enzyme):
+def rest_enzyme_activity(dna_seq, rest_enzyme, input_exon_locations):
     import re
     """
     This function searches a genetic sequence for restriction enzyme activity
     Inputs
     genetic sequence in string format
     restriction enzyme - EcoR1, BamH1, BsuM1
+    exon locations
 
     Returns
     -------
-    Restriction enzyme activity, location
+    Restriction enzyme activity, locations, inside/oputside flag
     """
     
     """
     EcoR1- forward G/AATTC, complementary CTTAA/G
     BAMH1 - forward G/GATCC, complementary CCTAG/G
     BsuM - forward CTCGAG, complementary CTCGAG
+    All 3 are palindromes, therefore no need to specify/search on complementary strand.
     """
+    enzyme_target_seq = []
     if rest_enzyme == "ecor1":
-        print("ECOR1") #placeholder
+        enzyme_target_seq.append(("gaattc", "ecor1"))
     elif rest_enzyme == "bamh1":
-        print("BAMH1") #placeholder
+        enzyme_target_seq.append(("ggatcc", "bamh1"))
     elif rest_enzyme == "bsum":
-        print("BSUM") #placeholder
+        enzyme_target_seq.append(("ctcgag", "bsum"))
+    elif rest_enzyme == "all":
+        enzyme_target_seq.append(("gaattc", "ecor1"))
+        enzyme_target_seq.append(("ggatcc", "bamh1"))
+        enzyme_target_seq.append(("ctcgag", "bsum"))
     
+    enzyme_activity_dict = {} #storing enzyme name (key) against activity locations (list of tuples)
+    for (e_seq, e_name) in enzyme_target_seq:
     ##The following code identifies any RE site
-    matched_loc = re.finditer("insert entry here variable", dna_seq) #Need to updat variable
-    rest_enzyme_locations=[]
-    for loc in matched_loc:
-        rest_enzyme_locations.append(loc.span()) #tuples
-    
-    ## If no match found.
-    if len(rest_enzyme_locations) == 0:
-        print("There is no restriction enzyme match for", rest_enzyme_locations)
+        matched_loc = re.finditer(e_seq, dna_seq)
+        rest_enzyme_locations=[]
+        for loc in matched_loc:
+            rest_enzyme_locations.append(loc.span()) #tuples
         
-    return("NILL") ##To update
+    
+        if len(rest_enzyme_locations) != 0:
+            exon_locations = []
+            for (start,stop) in input_exon_locations:
+                if start[0] == "<" or start[0] == ">":
+                    start = int(start[1:])
+                else:
+                    start = int(start)
+                if stop[0] == "<" or stop[0] == ">":
+                    stop = int(stop[1:])
+                else:
+                    stop = int(stop)
+                exon_locations.append((start,stop))
+                
+            exon_start_boundary = min(exon_locations[0])
+            exon_stop_boundary = max(exon_locations[1])         
+                
+        else:
+            print("NULL") #expand on if no match found
+            
+        for (enzyme_start,enzyme_stop) in rest_enzyme_locations:
+            enz_store = []
+            if (enzyme_start < exon_start_boundary and enzyme_stop < exon_start_boundary):
+                enz_store.append([(enzyme_start, enzyme_stop), 1])
+            elif (enzyme_start > exon_stop_boundary and enzyme_stop > exon_start_boundary):
+                enz_store.append([(enzyme_start, enzyme_stop), 1])
+            else:
+                enz_store.append([(enzyme_start, enzyme_stop), 0])
+            enzyme_activity_dict[e_name] = enz_store
+   
+    return(enzyme_activity_dict) ##To update - dictionary {restriction enzyme name (key),[activity sites] }
 
 def runAllcodon_use():
     """
