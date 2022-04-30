@@ -47,15 +47,15 @@ def frontend_input(request):
         temp_data = db_API.getgeneentries(searchfield)
        #["db_gene_id", "db_accession_code", "db_product", "db_location", "db_translation", "db_dna_seq"]  
        #also need exon_locations, comp_strand, codon_start
-       dbgeneid =
-       dbaccession =
-       dbproduct =
-       dblocation =
-       dbtranslation = 
-       db_dna_seq =
-       exon_locations =
-       comp_strand =
-       codon_start =
+        dbgeneid =
+        dbaccession =
+        dbproduct =
+        dblocation =
+        dbtranslation = 
+        db_dna_seq =
+        exon_locations =
+        comp_strand =
+        codon_start =
     # Search by accession number
     if data_type == "gen_acc":
         temp_data = db_API.sequence(searchfield)
@@ -99,7 +99,10 @@ def frontend_input(request):
     
     codon_data = {}
     import codon_useage
-    codon_data = codon_useage(coding_dna_sequence)
+    codon_data = codon_useage(coding_string)
+    
+    import prot_gene_alignment
+    prot_gene_alignment(dbtranslation, coding_string)
     
     if renzyme == 1:
         import codon_useage
@@ -339,3 +342,27 @@ def getAllcodon_use():
     Text file
     """
     return("textfile.txt")
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+def prot_gene_alignment(protein_seq, gene_sequence):
+    """
+    This function takes in a protein sequence and genomic sequence and aligns them.
+    If there is mismatch in length, the alignment does not occur.
+
+    Parameters
+    ----------
+    protein_seq : str
+        DESCRIPTION.
+    gene_sequence : str
+        DESCRIPTION.
+
+    Returns
+    -------
+    List of tuples of format (amino acid, codon)
+    """
+    if len(protein_seq) != (len(gene_sequence)/3):
+        print("ERROR: The sequences cannot be aligned")
+    else:
+        alignment_list =[]
+        for i in range(0,len(protein_seq)):
+            alignment_list.append((protein_seq[i], gene_sequence[i*3:(i*3)+3]))
+        return(alignment_list)
