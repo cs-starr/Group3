@@ -1,7 +1,10 @@
+# -*- coding: utf-8 -*-
 #!/usr/bin/python3
+
 """
-...Comment header goes here...
+Created on Thu Apr 28 11:05:49 2022
 This is the business logic API
+@author: angli
 """
 
 # Add the bl sub-directory to the module path (for testing this routine)
@@ -12,17 +15,106 @@ sys.path.insert(0, "../")
 
 import dbapi   # Import the database api
 
-def getAllEntries():
+
+def frontend_input(request):
     """
-    This function is designed to be called by the frontend when a list of gene
-    identifiers alone is required.
-    
+    This function takes a x item tuple or list of format:
+        (searchfield, data_type, codon_useage)
+        searchfield - string object
+        data_type - string object
+        rest_enzyme_flag - boolean (True/False)
+        rest_enzyme_name 
     Returns
     -------
+    #TBD
+    """
+    ##This is an assumption that the request is parsed as an iterable
+    ##To check with Coco and update, could be passed as 3 variables instead
+    searchfield = request[0]
+    data_type = request[1]
+    rest_enzyme_flag = request[2]
+    if rest_enzyme_flag ==1:
+        rest_enzyme_name = request[3]
     
-    """    
-    return(db_api.all_genebank())
+    import db_API
+    
+    temp_data=[]
+    
+    #All data type variable names to confirm with Coco
+    
+    # Search by gene ID
+    if data_type == "gene_id":
+        temp_data = db_API.getgeneentries(searchfield)
+       #["db_gene_id", "db_accession_code", "db_product", "db_location", "db_translation", "db_dna_seq"]  
+       #also need exon_locations, comp_strand, codon_start
+       dbgeneid =
+       dbaccession =
+       dbproduct =
+       dblocation =
+       dbtranslation = 
+       db_dna_seq =
+       exon_locations =
+       comp_strand =
+       codon_start =
+    # Search by accession number
+    if data_type == "gen_acc":
+        temp_data = db_API.sequence(searchfield)
+        ["gene_id","accession","protein id","location","translation","dna seq"]
+        dbgeneid =
+        dbaccession =
+        dbproduct =
+        dblocation =
+        dbtranslation = 
+        db_dna_seq =
+        exon_locations =
+        comp_strand =
+        codon_start =
+    # Search by protein product
+    if data_type == "prot_prod":
+        temp_data = db_API."variablename"(searchfield) #to complete once db_api updated
+        dbgeneid =
+        dbaccession =
+        dbproduct =
+        dblocation =
+        dbtranslation = 
+        db_dna_seq =
+        exon_locations =
+        comp_strand =
+        codon_start =
+    # Search by chromosome location
+    if data_type == "chro_loc":
+        temp_data = db_API."variablename"(searchfield) #to complete once db_api updated
+        dbgeneid =
+        dbaccession =
+        dbproduct =
+        dblocation =
+        dbtranslation = 
+        db_dna_seq =
+        exon_locations =
+        comp_strand =
+        codon_start =   
+    
+    import calc_exons
+    coding_string = calc_exons(db_dna_seq, exon_locations, comp_strand, codon_start)
+    
+    codon_data = {}
+    import codon_useage
+    codon_data = codon_useage(coding_dna_sequence)
+    
+    if renzyme == 1:
+        import codon_useage
+        rest_enzyme_activity(db_dna_seq, rest_enzyme_name, exon_locations)
+    
+    """
+    Storage
+    """
+    #Putting everything togeather for output
+    output_dictionary = {}
+    ##Need to finalise format
+    
+    return("variables to be returned")
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def calc_exons(dna_seq, exon_locations, comp_strand, codon_start):
     """
     This function calculates the exons
@@ -30,6 +122,9 @@ def calc_exons(dna_seq, exon_locations, comp_strand, codon_start):
     exon_location - list of tuples
     comp_string - boolean
     codon_start - int
+    --------
+    Returns:
+    String containing the coding DNA sequence
     """
     
     temp_exon_store = []
@@ -42,10 +137,12 @@ def calc_exons(dna_seq, exon_locations, comp_strand, codon_start):
             stop = int(stop[1:])
         else:
             stop = int(stop)
-        temp_exon_store.append(ex_dna_seq[start:stop])
+        temp_exon_store.append(dna_seq[start:(stop+1)])
     working_exon_string = "".join(temp_exon_store)
     
-    trim = (codon_start - 1)*3
+    #Addressing whether the sequence begins after the given co-ordinates. 
+    #(Codon start is which nucleotide it start from with 1 being the co-ordinated given)
+    trim = (codon_start - 1) 
     final_exon_str = ""
     
     if comp_strand == 1:
@@ -70,6 +167,7 @@ def calc_exons(dna_seq, exon_locations, comp_strand, codon_start):
     
     return(final_exon_str)
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def rest_enzyme_activity(dna_seq, rest_enzyme, input_exon_locations):
     import re
     """
@@ -81,7 +179,11 @@ def rest_enzyme_activity(dna_seq, rest_enzyme, input_exon_locations):
 
     Returns
     -------
-    Restriction enzyme activity, locations, inside/oputside flag
+    Restriction enzyme activity in dictionary format {Enzyme name:[[(Start, Stop), Exon interference]]}
+    Enzyme name - string
+    Start - int
+    Stop - int
+    Exon_interference - bool - 0 is no mid coding
     """
     
     """
@@ -109,7 +211,6 @@ def rest_enzyme_activity(dna_seq, rest_enzyme, input_exon_locations):
         rest_enzyme_locations=[]
         for loc in matched_loc:
             rest_enzyme_locations.append(loc.span()) #tuples
-        
     
         if len(rest_enzyme_locations) != 0:
             exon_locations = []
@@ -128,106 +229,37 @@ def rest_enzyme_activity(dna_seq, rest_enzyme, input_exon_locations):
             exon_stop_boundary = max(exon_locations[1])         
                 
         else:
-            print("NULL") #expand on if no match found
-            
+            print("No match for:", e_name) #expand on if no match found
+        enz_store = []    
         for (enzyme_start,enzyme_stop) in rest_enzyme_locations:
-            enz_store = []
             if (enzyme_start < exon_start_boundary and enzyme_stop < exon_start_boundary):
-                enz_store.append([(enzyme_start, enzyme_stop), 1])
-            elif (enzyme_start > exon_stop_boundary and enzyme_stop > exon_start_boundary):
-                enz_store.append([(enzyme_start, enzyme_stop), 1])
-            else:
                 enz_store.append([(enzyme_start, enzyme_stop), 0])
+            elif (enzyme_start > exon_stop_boundary and enzyme_stop > exon_start_boundary):
+                enz_store.append([(enzyme_start, enzyme_stop), 0])
+            else:
+                enz_store.append([(enzyme_start, enzyme_stop), 1])
             enzyme_activity_dict[e_name] = enz_store
-   
-    return(enzyme_activity_dict) ##To update - dictionary {restriction enzyme name (key),[activity sites] }
-
-def runAllcodon_use():
-    """
-    This function is a one time run event.  To calculate all coding regions within the database
-    and to calculate
-
-    Returns
-    -------
-    Writes data into a text file. (name TBD)
-    (Need to include - date/time of calculation)
-    """
-    return("into a text file")
-
-def getAllcodon_use():
-    """
-    This function allows the web frontend to access the pre-calculated - all codon use file
-
-    Returns
-    -------
-    None.
-    """
-    return("textfile.txt")
-    
-def frontend_input(request):
-    """
-    This function takes a x item tuple or list of format:
-        (searchfield, data_type, codon_useage)
-        searchfield - string object
-        data_type - string object
-        codon_useage - boolean (True/False)
-    Returns
-    -------
-    
-    """
-    searchfield = request[0]
-    data_type = request[1]
-    codon_flag = request[2]
-    
-    
-    temp_data=[]
-    if data_type == "gene_id":
-       temp_data = ["db_gene_id", "db_accession_code", "db_product", 
-                    "db_location", "db_translation", "db_dna_seq"]
-       """"temp_data = db_api.getgeneetries(searchfield)"""
-    if data_type == "gen_acc":
-        temp_data = "accessionn success"
-        """"temp_data = db_api.sequence(searchfield)"""
-    if data_type == "prot_prod":
-        temp_data = "protein success"
-           
-    if data_type == "chro_loc":
-        temp_data = ("tuple1", "tuple2")
-          
-    dna_seq = temp_data[5]
-    exon_locations = ()
-    comp_strand_flag =""
-    coding_regions = ()
-          
-    if codon_flag == 1:
-        codon_useage("dummy input")
-    
-    """
-    Storage
-    """
-    return("variables to be returned")
-
-def codon_useage(seq_input):
+            ##Needs additional code to calculate whether there is any interference.  Planned
+            ##as 
+    return(enzyme_activity_dict) 
+##To update - dictionary {restriction enzyme name (key),[activity sites, interference}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+def codon_useage(coding_dna_sequence):
     from collections import Counter
     import re
     
-    input_sequence =str(seq_input) 
-    
-    start_split = re.split("ATG", input_sequence, maxsplit=1)
+    input_sequence=coding_dna_sequence.upper()
+    start_split = re.split("ATG", input_sequence, maxsplit=1) #this is probably redundant - review needed
     print(start_split[1])
     
-    """
-    May need additional work to work out exons/intron locations
-    before this can be passed into raw_seq
-    
-    AJKGFJHKSADJHKJKHTJKHLATGAAABBBAAACCCAABCCCTGAADSFGKLJASDFJLKDSAFLKJ
-    """
     
     raw_seq = (start_split[1])
     len_rs = len(raw_seq)
     exp_iter = int(len_rs/3)
     current_iter = 0
     seq_slice = slice(0,3)
+    
+    #add ATG to the start - previous split method lopped off ATG, likely redundant if exon calculation done first
     codon_list = ["ATG",]
     
     while current_iter != exp_iter:
@@ -274,3 +306,36 @@ def codon_useage(seq_input):
         codon_use_data.update({i:(k[i],j, (k[i]/seq_total_codons)*100)})
     
     return(codon_use_data)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+def getAllEntries():
+    """
+    This function is designed to be called by the frontend when a list of gene
+    identifiers alone is required.
+    
+    Returns
+    -------
+    
+    """    
+    return(db_api.all_genebank())
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+def runAllcodon_use():
+    """
+    This function is a one time run event.  To calculate all coding regions within the database
+    and to calculate
+
+    Returns
+    -------
+    Writes data into a text file. (name TBD)
+    (Need to include - date/time of calculation)
+    """
+    return("into a text file")
+
+def getAllcodon_use():
+    """
+    This function allows the web frontend to access the pre-calculated - all codon use file
+
+    Returns
+    -------
+    Text file
+    """
+    return("textfile.txt")
