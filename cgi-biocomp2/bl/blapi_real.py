@@ -19,7 +19,7 @@ import dbapi   # Import the database api
 def frontend_input(request):
     """
     This function takes a x item tuple or list of format:
-        (searchfield, data_type, codon_useage)
+        (searchfield, data_type, rest_enzyme_flag, rest_enzyme_name )
         searchfield - string object
         data_type - string object
         rest_enzyme_flag - boolean (True/False)
@@ -59,7 +59,7 @@ def frontend_input(request):
     # Search by accession number
     if data_type == "gen_acc":
         temp_data = db_API.sequence(searchfield)
-        ["gene_id","accession","protein id","location","translation","dna seq"]
+        #["gene_id","accession","protein id","location","translation","dna seq"]
         dbgeneid =
         dbaccession =
         dbproduct =
@@ -71,7 +71,7 @@ def frontend_input(request):
         codon_start =
     # Search by protein product
     if data_type == "prot_prod":
-        temp_data = db_API."variablename"(searchfield) #to complete once db_api updated
+        temp_data = db_API."functionname"(searchfield) #to complete once db_api updated
         dbgeneid =
         dbaccession =
         dbproduct =
@@ -83,7 +83,7 @@ def frontend_input(request):
         codon_start =
     # Search by chromosome location
     if data_type == "chro_loc":
-        temp_data = db_API."variablename"(searchfield) #to complete once db_api updated
+        temp_data = db_API."functionname"(searchfield) #to complete once db_api updated
         dbgeneid =
         dbaccession =
         dbproduct =
@@ -102,15 +102,13 @@ def frontend_input(request):
     codon_data = codon_useage(coding_string)
     
     import prot_gene_alignment
-    prot_gene_alignment(dbtranslation, coding_string)
+    alignment = prot_gene_alignment(dbtranslation, coding_string)
     
     if renzyme == 1:
         import codon_useage
         rest_enzyme_activity(db_dna_seq, rest_enzyme_name, exon_locations)
     
-    """
-    Storage
-    """
+
     #Putting everything togeather for output
     output_dictionary = {}
     ##Need to finalise format
@@ -118,6 +116,7 @@ def frontend_input(request):
     return("variables to be returned")
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 def calc_exons(dna_seq, exon_locations, comp_strand, codon_start):
     """
     This function calculates the exons
@@ -172,7 +171,7 @@ def calc_exons(dna_seq, exon_locations, comp_strand, codon_start):
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def rest_enzyme_activity(dna_seq, rest_enzyme, input_exon_locations):
-    import re
+
     """
     This function searches a genetic sequence for restriction enzyme activity
     Inputs
@@ -195,6 +194,7 @@ def rest_enzyme_activity(dna_seq, rest_enzyme, input_exon_locations):
     BsuM - forward CTCGAG, complementary CTCGAG
     All 3 are palindromes, therefore no need to specify/search on complementary strand.
     """
+    import re
     enzyme_target_seq = []
     if rest_enzyme == "ecor1":
         enzyme_target_seq.append(("gaattc", "ecor1"))
@@ -231,54 +231,56 @@ def rest_enzyme_activity(dna_seq, rest_enzyme, input_exon_locations):
             exon_start_boundary = min(exon_locations[0])
             exon_stop_boundary = max(exon_locations[1])         
                 
+            enz_store = []    
+            for (enzyme_start,enzyme_stop) in rest_enzyme_locations:
+                if (enzyme_start < exon_start_boundary and enzyme_stop < exon_start_boundary):
+                    enz_store.append([(enzyme_start, enzyme_stop), 0])
+                elif (enzyme_start > exon_stop_boundary and enzyme_stop > exon_start_boundary):
+                    enz_store.append([(enzyme_start, enzyme_stop), 0])
+                else:
+                    enz_store.append([(enzyme_start, enzyme_stop), 1])
+                enzyme_activity_dict[e_name] = enz_store
+
         else:
-            print("No match for:", e_name) #expand on if no match found
-        enz_store = []    
-        for (enzyme_start,enzyme_stop) in rest_enzyme_locations:
-            if (enzyme_start < exon_start_boundary and enzyme_stop < exon_start_boundary):
-                enz_store.append([(enzyme_start, enzyme_stop), 0])
-            elif (enzyme_start > exon_stop_boundary and enzyme_stop > exon_start_boundary):
-                enz_store.append([(enzyme_start, enzyme_stop), 0])
-            else:
-                enz_store.append([(enzyme_start, enzyme_stop), 1])
-            enzyme_activity_dict[e_name] = enz_store
-            ##Needs additional code to calculate whether there is any interference.  Planned
-            ##as 
-    return(enzyme_activity_dict) 
-##To update - dictionary {restriction enzyme name (key),[activity sites, interference}
+            enz_store=[(("No","activity"),2)]
+            enzyme_activity_dict[e_name] = enz_store 
+    
+    interference_output = []
+    for (e_seq, e_name) in enzyme_target_seq:
+        Exon_interefence = 0
+        
+        for i in range(0,len(enzyme_activity_dict.get(e_name))):
+            Exon_interefence += int(enzyme_activity_dict.get(e_name)[i][1])
+        if Exon_interefence == 0:
+            interference_output.append((e_name, 0))
+        else:
+            interference_output.append((e_name, 1))
+    return(enzyme_activity_dict, interference_output)
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def codon_useage(coding_dna_sequence):
     from collections import Counter
-    import re
     
-    input_sequence=coding_dna_sequence.upper()
-    start_split = re.split("ATG", input_sequence, maxsplit=1) #this is probably redundant - review needed
-    print(start_split[1])
+    raw_seq = coding_dna_sequence.upper()
     
-    
-    raw_seq = (start_split[1])
     len_rs = len(raw_seq)
     exp_iter = int(len_rs/3)
     current_iter = 0
     seq_slice = slice(0,3)
     
-    #add ATG to the start - previous split method lopped off ATG, likely redundant if exon calculation done first
-    codon_list = ["ATG",]
+    codon_list = []
     
     while current_iter != exp_iter:
         codon = raw_seq[seq_slice]
-        print(codon)
-        print(current_iter, exp_iter)
         codon_list.append(codon)
         if codon == "TAA" or codon == "TAG" or codon == "TGA":
             break
         raw_seq = raw_seq[3:]
         current_iter += 1
     
-    print(codon_list)
     seq_total_codons = len(codon_list)
     
-    k = Counter(codon_list)
+    count_of = Counter(codon_list)
         
     master_codon_tuples = [
         ("ATT","I"), ("ATC", "I"), ("ATA", "I"),
@@ -305,10 +307,11 @@ def codon_useage(coding_dna_sequence):
         ]
     
     codon_use_data={}
-    for (i,j) in master_codon_tuples:
-        codon_use_data.update({i:(k[i],j, (k[i]/seq_total_codons)*100)})
+    for (m_codon, AA) in master_codon_tuples:
+        codon_use_data.update({m_codon:(count_of[m_codon], AA, (count_of[m_codon]/seq_total_codons)*100)})
     
     return(codon_use_data)
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def getAllEntries():
     """
@@ -320,6 +323,7 @@ def getAllEntries():
     
     """    
     return(db_api.all_genebank())
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def runAllcodon_use():
     """
@@ -342,7 +346,9 @@ def getAllcodon_use():
     Text file
     """
     return("textfile.txt")
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 def prot_gene_alignment(protein_seq, gene_sequence):
     """
     This function takes in a protein sequence and genomic sequence and aligns them.
