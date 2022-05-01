@@ -157,7 +157,7 @@ def getAllcodon_use():
     return(total_codon_use.txt)
 
 #-----------------------------------------
-def rest_enzyme_list:
+def rest_enzyme_list():
     """
     This function passes a list of available restriction enzymes to the frontend.
     """
