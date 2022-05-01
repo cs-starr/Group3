@@ -18,18 +18,36 @@ import dbapi   # Import the database api
 
 def frontend_input(request):
     """
-    This function takes a x item tuple or list of format:
-        (searchfield, data_type, rest_enzyme_flag, rest_enzyme_name )
+    This function takes a 3 or 4 item iterable object (tuple or list)
+    with format: (searchfield, data_type, rest_enzyme_flag, rest_enzyme_name)
         searchfield - string object
-        data_type - string object
+        data_type - string object of options "gene_id", "gen_acc", "prot_prod" or "chro_loc"
         rest_enzyme_flag - boolean (True/False)
-        rest_enzyme_name 
+        rest_enzyme_name - string object
+        
     Returns
     -------
-    #TBD
+    Dictionary with the following structure for 1 key:value pair:
+        {Gene name:([Accession, Protein product name, Chromosomal location],[raw DNA sequence, Exon locations], alignment, codon_data, renzyme_output)}
+        Gene name - string - dictionary key
+        [Accession, Protein product name, Chromosomal location] - 3 item list of string objects
+        [raw DNA sequence, Exon locations] - 2 item list, of string oject and list of tuples (of length 1->x)
+        alignment - list of tuples with of (Amino acid, codon) pairing.  An error message is returned if alignment fails
+        codon_data - dictionary of codon useage in format {codon:(number_of_occurances, amino_acid_letter, codon_use_perc)}
+            codon - str
+            number_of_occurances - int
+            amino_acid_letter - str
+            codon_use_perc - float
+        renzyme_output - returns a tuple of 2 dictionaries
+            renzyme_output[0] - {enzyme_name :[(start, stop), midcut]}
+                enzyme_name - str
+                (start,stop) - int (if activity in overall sequence), otherwise returns str ("No","activity")
+                midcut - int (0 - no mid exon cut, 1 - mid exon cut, 2 - no activity on DNA strand) - specific to the (start,stop) site
+            renzyme_output[1] - {enzyme_name:overall_midcut}
+                overall_midcut - int (0 - activity present on DNA strand but suitable to isolate exons, 1 - enzyme not suitable to isolate exons)
+        
     """
-    ##This is an assumption that the request is parsed as an iterable
-    ##To check with Coco and update, could be passed as 3 variables instead
+    ##Request is passed from frontend as 3 or 4 item iterable
     searchfield = request[0]
     data_type = request[1]
     rest_enzyme_flag = request[2]
@@ -39,8 +57,6 @@ def frontend_input(request):
     import db_API
     
     temp_data=[]
-    
-    #All data type variable names to confirm with Coco
     
     # Search by gene ID
     if data_type == "gene_id":
@@ -104,16 +120,16 @@ def frontend_input(request):
     import prot_gene_alignment
     alignment = prot_gene_alignment(dbtranslation, coding_string)
     
-    if renzyme == 1:
+    if rest_enzyme_flag == 1:
         import codon_useage
-        rest_enzyme_activity(db_dna_seq, rest_enzyme_name, exon_locations)
+        renzyme_output = rest_enzyme_activity(db_dna_seq, rest_enzyme_name, exon_locations)
+    else:
+        renzyme_output = None
     
-
-    #Putting everything togeather for output
-    output_dictionary = {}
-    ##Need to finalise format
+    #Combining output
+    output_dictionary = {dbgeneid:([dbaccession, dbproduct, dblocation],[db_dna_seq, exon_locations], alignment, codon_data, renzyme_output)}
     
-    return("variables to be returned")
+    return(output_dictionary)
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -173,26 +189,33 @@ def calc_exons(dna_seq, exon_locations, comp_strand, codon_start):
 def rest_enzyme_activity(dna_seq, rest_enzyme, input_exon_locations):
 
     """
-    This function searches a genetic sequence for restriction enzyme activity
+    This function searches a genetic sequence for restriction enzyme activity and identifieds enzymes
+    with activity outside of the exon start/stop region.
+    
     Inputs
+    -------
     genetic sequence in string format
-    restriction enzyme - EcoR1, BamH1, BsuM1
-    exon locations
+    restriction enzyme - str - EcoR1, BamH1, BsuM1, all
+    input_exon_locations - list of tuples
 
     Returns
     -------
-    Restriction enzyme activity in dictionary format {Enzyme name:[[(Start, Stop), Exon interference]]}
-    Enzyme name - string
-    Start - int
-    Stop - int
-    Exon_interference - bool - 0 is no mid coding
+    Returns a tuple of 2 dictionaries
+       enzyme_activity_dict - {enzyme_name :[(start, stop), midcut]}
+           enzyme_name - str
+           (start,stop) - int (if activity in overall sequence), otherwise returns str ("No","activity")
+           midcut - int (0 - no mid exon cut, 1 - mid exon cut, 2 - no activity on DNA strand) - specific to the (start,stop) site
+       interference_output - {enzyme_name:overall_midcut}
+           overall_midcut - int (0 - activity present on DNA strand but suitable to isolate exons, 1 - enzyme not suitable to isolate exons)
     """
     
     """
-    EcoR1- forward G/AATTC, complementary CTTAA/G
-    BAMH1 - forward G/GATCC, complementary CCTAG/G
+    Additional notes
+    EcoR1- forward GAATTC, complementary CTTAA/G
+    BAMH1 - forward GGATCC, complementary CCTAG/G
     BsuM - forward CTCGAG, complementary CTCGAG
-    All 3 are palindromes, therefore no need to specify/search on complementary strand.
+    Most restriction enzymes are palindromes, therefore no need to specify/search on complementary strand based on entry requirements.
+    Modifications to code may be required for non palindromic REs
     """
     import re
     enzyme_target_seq = []
@@ -240,10 +263,11 @@ def rest_enzyme_activity(dna_seq, rest_enzyme, input_exon_locations):
                 else:
                     enz_store.append([(enzyme_start, enzyme_stop), 1])
                 enzyme_activity_dict[e_name] = enz_store
-
+                ##Needs additional code to calculate whether there is any interference.  Planned
+                ##as
         else:
             enz_store=[(("No","activity"),2)]
-            enzyme_activity_dict[e_name] = enz_store 
+            enzyme_activity_dict[e_name] = enz_store #expand on if no match found
     
     interference_output = []
     for (e_seq, e_name) in enzyme_target_seq:
@@ -255,9 +279,10 @@ def rest_enzyme_activity(dna_seq, rest_enzyme, input_exon_locations):
             interference_output.append((e_name, 0))
         else:
             interference_output.append((e_name, 1))
-    return(enzyme_activity_dict, interference_output)
+    return(enzyme_activity_dict, interference_output) 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 def codon_useage(coding_dna_sequence):
     from collections import Counter
     
@@ -335,7 +360,95 @@ def runAllcodon_use():
     Writes data into a text file. (name TBD)
     (Need to include - date/time of calculation)
     """
-    return("into a text file")
+    import getgetAllEntries
+    import db_API
+    import calc_exons
+    
+    #Set up codon counter
+    master_codon_tuples = [
+        ("ATT","I"), ("ATC", "I"), ("ATA", "I"),
+        ("CTT", "L"), ("CTC", "L"), ("CTA", "L"), ("CTG", "L"), ("TTA", "L"), ("TTG", "L"),
+        ("GTT", "V"), ("GTC", "V"), ("GTA", "V"), ("GTG", "V"),
+        ("TTT", "F"), ("TTC", "F"),
+        ("ATG", "M"),
+        ("TGT", "C"), ("TGC", "C"),
+        ("GCT", "A"), ("GCC", "A"), ("GCA", "A"), ("GCG", "A"),
+        ("GGT", "G"), ("GGC", "G"), ("GGA", "G"), ("GGG", "G"),
+        ("CCT", "P"), ("CCC", "P"), ("CCA", "P"), ("CCG", "P"),
+        ("ACT", "T"), ("ACC", "T"), ("ACA", "T"), ("ACG", "T"),
+        ("TCT", "S"), ("TCC", "S"), ("TCA", "S"), ("TCG", "S"), ("AGT", "S"), ("AGC", "S"),
+        ("TAT", "Y"), ("TAC", "Y"),
+        ("TGG", "W"),
+        ("CAA", "Q"), ("CAG", "Q"),
+        ("AAT", "N"), ("AAC", "N"),
+        ("CAT", "H"), ("CAC", "H"),
+        ("GAA", "E"), ("GAG", "E"),
+        ("GAT", "D"), ("GAC", "D"),
+        ("AAA", "K"), ("AAG", "K"),
+        ("CGT", "R"), ("CGC", "R"), ("CGA", "R"), ("CGG", "R"), ("AGA", "R"), ("AGG", "R"),
+        ("TAA", "Stop"), ("TAG", "Stop"), ("TGA", "Stop")
+        ]
+    master_codon_counter=[]
+    for (codon_code, aa_code) in master_codon_tuples:
+        master_codon_counter.append((codon_code, aa_code, 0))
+    
+    #Get all entries from DB later
+    entry_list = getgetAllEntries()
+    
+    #iterating on accession number
+    #db_API output: return[('accession_number', 'gene_id', 'protein name','chromosomal location')]
+    master_exon_list = []
+    
+    for acc_number in entry_list[0]:
+        temp_data = db_API.sequence(acc_number)
+        dna_seq = temp_data["a"] #expecting string
+        exon_locations = temp_data["x"] #expecting list of tuples
+        comp_strand = temp_data["y"] #expecting comp strand location
+        codon_start = temp_data["z"] #expecting codon start loc
+        exon_str = calc_exons(dna_seq, exon_locations, comp_strand, codon_start
+        master_exon_list.append(exon_str)
+    
+    #break down each exon into individual codons
+    for exon in master_exon_list :
+        raw_seq = exon.upper()
+        len_rs = len(raw_seq)
+        exp_iter = int(len_rs/3)
+        current_iter = 0
+        seq_slice = slice(0,3)
+        
+        codon_list = []
+        
+        while current_iter != exp_iter:
+            codon = raw_seq[seq_slice]
+            codon_list.append(codon)
+            if codon == "TAA" or codon == "TAG" or codon == "TGA":
+                break
+            raw_seq = raw_seq[3:]
+            current_iter += 1
+        
+        seq_total_codons = len(codon_list)
+        
+        k = Counter(codon_list)
+        for (codon_code, aa_code, count) in master_codon_counter:
+            update_count = k[codon_code]
+            count = count + update_count
+    
+    total_count = 0
+    for (codon_info) in master_codon_counter:
+        total_count = total_count + codon_info[2] 
+    
+    total_count = 0
+    for (codon_info) in master_codon_counter:
+        total_count = total_count + codon_info[2]
+    
+    with open("total_codon_use.txt", 'w') as tcu:
+        for (codon_info) in master_codon_counter:
+            tcu.write("\n" + str(codon_info[0])+" ")
+            tcu.write(str(codon_info[1] + " "))
+            tcu.write((str(codon_info[2]) + " "))
+            tcu.write(str((codon_info[2]/total_count)*100) + " ")
+
+    return("Calculation complete")
 
 def getAllcodon_use():
     """
@@ -343,9 +456,11 @@ def getAllcodon_use():
 
     Returns
     -------
-    Text file
+    Total codon use textfile
+    Format Codon, amino_acid, count, percentage
+    Separated by " "
     """
-    return("textfile.txt")
+    return(total_codon_use.txt)
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -357,18 +472,25 @@ def prot_gene_alignment(protein_seq, gene_sequence):
     Parameters
     ----------
     protein_seq : str
-        DESCRIPTION.
     gene_sequence : str
-        DESCRIPTION.
 
     Returns
     -------
     List of tuples of format (amino acid, codon)
     """
+    alignment_list =[]
     if len(protein_seq) != (len(gene_sequence)/3):
-        print("ERROR: The sequences cannot be aligned")
+        alignment_list.append("ERROR: The sequences cannot be aligned")
     else:
-        alignment_list =[]
         for i in range(0,len(protein_seq)):
             alignment_list.append((protein_seq[i], gene_sequence[i*3:(i*3)+3]))
-        return(alignment_list)
+    return(alignment_list)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+def rest_enzyme_list:
+    """
+    This function passes a list of available restriction enzymes to the frontend.
+    """
+    enzyme_list = ["ecor1", "bamh1", "bsum", "all"]
+return(enzyme_list)
