@@ -16,6 +16,7 @@ def runAllcodon_use():
     (Need to include - date/time of calculation)
     """
     import getgetAllEntries
+    import bl_api
     import db_API
     import calc_exons
     
@@ -48,7 +49,7 @@ def runAllcodon_use():
         master_codon_counter.append((codon_code, aa_code, 0))
     
     #Get all entries from DB later
-    entry_list = getgetAllEntries()
+    entry_list = bl_api.getgetAllEntries()
     
     #iterating on accession number
     #db_API output: return[('accession_number', 'gene_id', 'protein name','chromosomal location')]
