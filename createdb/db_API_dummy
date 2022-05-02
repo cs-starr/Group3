@@ -1,5 +1,15 @@
 #!/usr/bin/env python3
 
+"""
+Program: Genebank parser
+Date Created: 1st of April 2022
+Author: Janani Govindarasan
+Function: Grep relevant information from genebank file and populate mysql database. 
+Description:
+This program reads the genbank chromosome 7 file and regex the following for each entry:
+accession number, gene_id, location , product, CDS, amino acid sequence and dna sequence. 
+""""
+
 import pymysql
 
 """
