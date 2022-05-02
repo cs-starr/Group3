@@ -18,7 +18,7 @@ finally:
     connection.close()
     
 
-
+#creating gene table 
 GENEsummary = "CREATE TABLE IF NOT EXISTS GENE
                 (
                     accession      VARCHAR(100)     NOT NULL,\
@@ -27,8 +27,8 @@ GENEsummary = "CREATE TABLE IF NOT EXISTS GENE
                     location      VARCHAR(80)     NOT NULL,\
                     PRIMARY KEY (accession))
                  )"
-       
-DNAsummary ="CREATE TABLE IF NOT EXISTS ORIGINS
+#creating DNA table     
+DNAsummary ="CREATE TABLE IF NOT EXISTS DNA
 		(   accession      VARCHAR(100)     NOT NULL,
     		    sequence      LONGTEXT     NOT NULL,
     		    PRIMARY KEY (accession),
