@@ -1,12 +1,3 @@
-# -*- coding: utf-8 -*-
-#!/usr/bin/python3
-
-"""
-Created on Thu Apr 28 11:05:49 2022
-This is the script for exon use calculation
-@author: angli
-"""
-
 def calc_exons(dna_seq, exon_locations, comp_strand, codon_start):
     """
     This function calculates the exons
@@ -28,8 +19,8 @@ def calc_exons(dna_seq, exon_locations, comp_strand, codon_start):
         if stop[0] == "<" or stop[0] == ">":
             stop = int(stop[1:])
         else:
-            stop = int(stop)
-        temp_exon_store.append(dna_seq[start:(stop+1)])
+            stop = int(stop)-1
+        temp_exon_store.append(dna_seq[(start-1):(stop)])
     working_exon_string = "".join(temp_exon_store)
     
     #Addressing whether the sequence begins after the given co-ordinates. 
@@ -58,3 +49,21 @@ def calc_exons(dna_seq, exon_locations, comp_strand, codon_start):
     final_exon_str = final_exon_str[trim:]
     
     return(final_exon_str)
+
+"""
+#Test code:
+ds = "aggaaggcatgcggtgggccctactggtgcttctagctttcctgtctcctggtgagtacgctgcctacagagaggctcacaggttgggttttgttttgttttcttcttgaaaggggtgccatacaaaggaatacctcattgtattttgtgttgttcccattgcagccagtcagaaatcttccaacttggaagggagaacgaagtcagtcaccaggcagactgggtcatctgctgaaatcacttgcgatcttactgtaacaaataccttctacatccactggtacctacaccaggaggggaaggccccacagcgtcttctgtactatgacgtctccaccgcaagggatgtgttggaatcaggactcagtccaggaaagtattatactcatacacccaggaggtggagctggatattgagactgcaaaatctaattgaaaatgattctggggtctattactgtgccacctggcggacgaattattataagaaactctttggcagtggaacaacacttgttgtcacaggtaagtatcggaagaatacaacatttccaaggtaatagagggaaggcaggaaatgattaaactggaataatgt"
+el =  [("9","51"),("166",">525")]
+cs = 0
+csod = 1
+
+ds2 = "ctgcttgatggcaaagaaataaagcgactgaatgttcagtggctccgagcacacctgggcatcgtgtcccaggagcccatcctgtttgactgcagcattgctgagaacattgcctatggagacaacagccgggtggtgtcacaggaagagatcgtgagggcagcaaaggaggccaacatacatgccttcatcgagtcactgcctaat"
+el2 =  [("<1",">207")]
+cs2 = 0
+csod2 = 1
+print(calc_exons(ds,el,cs,csod))
+print(len(calc_exons(ds,el,cs,csod)))
+print("space-------")
+print(calc_exons(ds2,el2,cs2,csod2))
+print(len(calc_exons(ds2,el2,cs2,csod2)))
+"""
