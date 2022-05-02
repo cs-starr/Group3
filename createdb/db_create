@@ -34,10 +34,10 @@ finally:
 #creating gene table 
 GENEsummary = "CREATE TABLE IF NOT EXISTS GENE
                 (
-                    accession      VARCHAR(100)     NOT NULL,\
-                    gene     VARCHAR(80)     NOT NULL,\
-                    product      VARCHAR(80)     NOT NULL,\
-                    location      VARCHAR(80)     NOT NULL,\
+                    accession      VARCHAR(100)    NOT NULL,\
+                    gene           VARCHAR(80)     NOT NULL,\
+                    product        VARCHAR(80)     NOT NULL,\
+                    location       VARCHAR(80)     NOT NULL,\
                     PRIMARY KEY (accession))
                  )"
 		
@@ -45,10 +45,10 @@ GENEsummary = "CREATE TABLE IF NOT EXISTS GENE
 CDSsummary = "CREATE TABLE IF NOT EXISTS CDS
                 (
                     accession      VARCHAR(100)     NOT NULL,\
-                    gene     VARCHAR(80)     NOT NULL,\
-                    product      VARCHAR(80)     NOT NULL,\
-                    location      VARCHAR(80)     NOT NULL,\
-		    CDS      VARCHAR(80)     NOT NULL,\
+                    gene           VARCHAR(80)      NOT NULL,\
+                    product        VARCHAR(80)      NOT NULL,\
+                    location       VARCHAR(80)      NOT NULL,\
+		    CDS            VARCHAR(80)      NOT NULL,\
                     PRIMARY KEY (accession))
                  )"
 		
@@ -57,9 +57,9 @@ CDSsummary = "CREATE TABLE IF NOT EXISTS CDS
 DNAsummary = "CREATE TABLE IF NOT EXISTS DNA
                 (
                     accession      VARCHAR(100)     NOT NULL,\
-                    sequence     VARCHAR(80)     NOT NULL,\
-                    aa_seq      VARCHAR(80)     NOT NULL,\
-                    protein_id      VARCHAR(80)     NOT NULL,\
+                    sequence       MEDIUMTEXT       NOT NULL,\
+                    aa_seq         MEDIUMTEXT       NOT NULL,\
+                    protein_id     VARCHAR(80)      NOT NULL,\
                     PRIMARY KEY (accession))
                  )"
 
