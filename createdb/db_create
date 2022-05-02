@@ -27,10 +27,11 @@ GENEsummary = "CREATE TABLE IF NOT EXISTS GENE
                     location      VARCHAR(80)     NOT NULL,\
                     PRIMARY KEY (accession))
                  )"
-#creating DNA table     
-DNAsummary ="CREATE TABLE IF NOT EXISTS DNA
-		(   accession      VARCHAR(100)     NOT NULL,
-    		    sequence      LONGTEXT     NOT NULL,
+		
+#creating CDS table     
+DNAsummary ="CREATE TABLE IF NOT EXISTS CDS
+		(   gene      VARCHAR(100)     NOT NULL,
+    		    product      LONGTEXT     NOT NULL,
     		    PRIMARY KEY (accession),
                     FOREIGN KEY (accession)
                     REFERENCES GENE (accession)
@@ -53,13 +54,13 @@ connection = pymysql.connect(cf.mysql["host"],
 try:
     with connection.cursor() as cursor:
         
-        cursor.execute('DROP TABLE IF EXISTS ORIGINS')
+        cursor.execute('DROP TABLE IF EXISTS DNA')
         cursor.execute('DROP TABLE IF EXISTS CDS')
-        cursor.execute('DROP TABLE IF EXISTS LOCUS')
         cursor.execute('DROP TABLE IF EXISTS GENE')
         
         cursor.execute(GENEsummary)
         cursor.execute(DNAsummary)
+	cursor.execute(CDSsummary)
 
         connection.commit()
 
