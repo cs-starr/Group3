@@ -71,14 +71,14 @@ def getgeneentries(gene):
 def sequence(accession):
     
      cursorObject        = connectionObject.cursor() 
-    sqlquery= 'SELECT accession, sequence FROM dna'
+    sqlquery= 'SELECT accession, sequence FROM DNA_TABLE'
     cursorObject.execute(sqlQuery)
     rows                = cursorObject.fetchall()
 
     for row in rows:
     yield(row)
 
-     return[("gene_id","accession","protein id","location","translation","seq")]
+     return[("accession","sequence")]
     
     
     
@@ -93,7 +93,7 @@ def get_proteinnames():
     
     
    cursorObject        = connectionObject.cursor() 
-    sqlquery= 'SELECT DISTINCT product \
+    sqlquery= 'SELECT product FROM GENE TABLE'
     cursorObject.execute(sqlQuery)
     rows                = cursorObject.fetchall()
 
@@ -113,7 +113,7 @@ def get_accessionno():
  
     
    cursorObject        = connectionObject.cursor() 
-    sqlquery= 'SELECT Accession'
+    sqlquery= 'SELECT Accession FROM GENE_TABLE'
     cursorObject.execute(sqlQuery)
     rows                = cursorObject.fetchall()
 
@@ -131,7 +131,7 @@ def get_accessionno():
    
     
    cursorObject        = connectionObject.cursor() 
-    sqlquery= 'SELECT Accession, location'
+    sqlquery= 'SELECT Accession, location FROM CDS_TABLE'
     cursorObject.execute(sqlQuery)
     rows                = cursorObject.fetchall()
 
@@ -147,11 +147,11 @@ def get_accessionno():
        input:gene_id
        return: SQL query returning a list of genes.
     """
-def get_geneid():
+def get_CDS():
   
     
    cursorObject        = connectionObject.cursor() 
-    sqlquery= 'SELECT Accession, gene_id, '
+    sqlquery= 'SELECT Accession, CDS FROM CDS_TABLE '
     cursorObject.execute(sqlQuery)
     rows                = cursorObject.fetchall()
 
