@@ -3,7 +3,7 @@
 
 """
 Created on Sun May  1 14:46:58 2022
-This is a testing enviroment BL_API - which will provide output to the frontend in the expected end format.
+This is a testing enviroment BLAPI
 @author: angli
 """
 
@@ -27,8 +27,9 @@ def frontend_input(request):
         
     Returns
     -------
-    Dictionary with the following structure for 1 key:value pair:
-        {Gene name:([Accession, Protein product name, Chromosomal location],[raw DNA sequence, Exon locations], alignment, codon_data, renzyme_output)}
+    Dictionary with the following structure for key:value pair:
+        {index:([Gene name, Accession, Protein product name, Chromosomal location],[raw DNA sequence, Exon locations], alignment, codon_data, renzyme_output)}
+        index - int - 0 -> x (number of entries returned)
         Gene name - string - dictionary key
         [Accession, Protein product name, Chromosomal location] - 3 item list of string objects
         [raw DNA sequence, Exon locations] - 2 item list, of string oject and list of tuples (of length 1->x)
@@ -63,74 +64,122 @@ def frontend_input(request):
         #temp_data = db_API.getgeneentries(searchfield)
        #["db_gene_id", "db_accession_code", "db_product", "db_location", "db_translation", "db_dna_seq"]  
        #also need exon_locations, comp_strand, codon_start
-        dbgeneid = "ABCB1"
-        dbaccession = "HQ291662"
-        dbproduct = "multidrug resistance protein 1"
-        dblocation = "7q21.12"
-        dbtranslation = "LLDGKEIKRLNVQWLRAHLGIVSQEPILFDCSIAENIAYGDNSRVVSQEEIVRAAKEANIHAFIESLPN"
-        db_dna_seq = "ctgcttgatggcaaagaaataaagcgactgaatgttcagtggctccgagcacacctgggcatcgtgtcccaggagcccatcctgtttgactgcagcattgctgagaacattgcctatggagacaacagccgggtggtgtcacaggaagagatcgtgagggcagcaaaggaggccaacatacatgccttcatcgagtcactgcctaat"
-        exon_locations = [("<1",">207")]
-        comp_strand = 0
-        codon_start = 1
+        temp_data =[("ABCB1",
+                     "HQ291662",
+                     "multidrug resistance protein 1", 
+                     "7q21.12", 
+                     "LLDGKEIKRLNVQWLRAHLGIVSQEPILFDCSIAENIAYGDNSRVVSQEEIVRAAKEANIHAFIESLPN",
+                     "ctgcttgatggcaaagaaataaagcgactgaatgttcagtggctccgagcacacctgggcatcgtgtcccaggagcccatcctgtttgactgcagcattgctgagaacattgcctatggagacaacagccgggtggtgtcacaggaagagatcgtgagggcagcaaaggaggccaacatacatgccttcatcgagtcactgcctaat",
+                     [("<1",">207")],
+                     0,
+                     1), 
+                    ("TCRG",
+                     "M13824",
+                     "T cell receptor gamma chain variable region",
+                     "7p15-p14",
+                     "MRWALLVLLAFLSPASQKSSNLEGRTKSVTRQTGSSAEITCDLTVTNTFYIHWYLHQEGKAPQRLLYYDVSTARDVLESGLSPGKYYTHTPRRWSWILRLQNLIENDSGVYYCATWRTNYYKKLFGSGTTLVVT",
+                     "aggaaggcatgcggtgggccctactggtgcttctagctttcctgtctcctggtgagtacgctgcctacagagaggctcacaggttgggttttgttttgttttcttcttgaaaggggtgccatacaaaggaatacctcattgtattttgtgttgttcccattgcagccagtcagaaatcttccaacttggaagggagaacgaagtcagtcaccaggcagactgggtcatctgctgaaatcacttgcgatcttactgtaacaaataccttctacatccactggtacctacaccaggaggggaaggccccacagcgtcttctgtactatgacgtctccaccgcaagggatgtgttggaatcaggactcagtccaggaaagtattatactcatacacccaggaggtggagctggatattgagactgcaaaatctaattgaaaatgattctggggtctattactgtgccacctggcggacgaattattataagaaactctttggcagtggaacaacacttgttgtcacaggtaagtatcggaagaatacaacatttccaaggtaatagagggaaggcaggaaatgattaaactggaataatgt",
+                     [("9","51"),("166",">525")],
+                     0,
+                     1)]
     # Search by accession number
     if data_type == "gen_acc":
         #temp_data = db_API.sequence(searchfield)
         #["gene_id","accession","protein id","location","translation","dna seq"]
-        dbgeneid = "ABCB1"
-        dbaccession = "HQ291662"
-        dbproduct = "multidrug resistance protein 1"
-        dblocation = "7q21.12"
-        dbtranslation = "LLDGKEIKRLNVQWLRAHLGIVSQEPILFDCSIAENIAYGDNSRVVSQEEIVRAAKEANIHAFIESLPN"
-        db_dna_seq = "ctgcttgatggcaaagaaataaagcgactgaatgttcagtggctccgagcacacctgggcatcgtgtcccaggagcccatcctgtttgactgcagcattgctgagaacattgcctatggagacaacagccgggtggtgtcacaggaagagatcgtgagggcagcaaaggaggccaacatacatgccttcatcgagtcactgcctaat"
-        exon_locations = [("<1",">207")]
-        comp_strand = 0
-        codon_start = 1
+        temp_data =[("ABCB1",
+                     "HQ291662",
+                     "multidrug resistance protein 1", 
+                     "7q21.12", 
+                     "LLDGKEIKRLNVQWLRAHLGIVSQEPILFDCSIAENIAYGDNSRVVSQEEIVRAAKEANIHAFIESLPN",
+                     "ctgcttgatggcaaagaaataaagcgactgaatgttcagtggctccgagcacacctgggcatcgtgtcccaggagcccatcctgtttgactgcagcattgctgagaacattgcctatggagacaacagccgggtggtgtcacaggaagagatcgtgagggcagcaaaggaggccaacatacatgccttcatcgagtcactgcctaat",
+                     [("<1",">207")],
+                     0,
+                     1), 
+                    ("TCRG",
+                     "M13824",
+                     "T cell receptor gamma chain variable region",
+                     "7p15-p14",
+                     "MRWALLVLLAFLSPASQKSSNLEGRTKSVTRQTGSSAEITCDLTVTNTFYIHWYLHQEGKAPQRLLYYDVSTARDVLESGLSPGKYYTHTPRRWSWILRLQNLIENDSGVYYCATWRTNYYKKLFGSGTTLVVT",
+                     "aggaaggcatgcggtgggccctactggtgcttctagctttcctgtctcctggtgagtacgctgcctacagagaggctcacaggttgggttttgttttgttttcttcttgaaaggggtgccatacaaaggaatacctcattgtattttgtgttgttcccattgcagccagtcagaaatcttccaacttggaagggagaacgaagtcagtcaccaggcagactgggtcatctgctgaaatcacttgcgatcttactgtaacaaataccttctacatccactggtacctacaccaggaggggaaggccccacagcgtcttctgtactatgacgtctccaccgcaagggatgtgttggaatcaggactcagtccaggaaagtattatactcatacacccaggaggtggagctggatattgagactgcaaaatctaattgaaaatgattctggggtctattactgtgccacctggcggacgaattattataagaaactctttggcagtggaacaacacttgttgtcacaggtaagtatcggaagaatacaacatttccaaggtaatagagggaaggcaggaaatgattaaactggaataatgt",
+                     [("9","51"),("166",">525")],
+                     0,
+                     1)]
     # Search by protein product
     if data_type == "prot_prod":
         #temp_data = db_API."functionname"(searchfield) #to complete once db_api updated
-        dbgeneid = "ABCB1"
-        dbaccession = "HQ291662"
-        dbproduct = "multidrug resistance protein 1"
-        dblocation = "7q21.12"
-        dbtranslation = "LLDGKEIKRLNVQWLRAHLGIVSQEPILFDCSIAENIAYGDNSRVVSQEEIVRAAKEANIHAFIESLPN"
-        db_dna_seq = "ctgcttgatggcaaagaaataaagcgactgaatgttcagtggctccgagcacacctgggcatcgtgtcccaggagcccatcctgtttgactgcagcattgctgagaacattgcctatggagacaacagccgggtggtgtcacaggaagagatcgtgagggcagcaaaggaggccaacatacatgccttcatcgagtcactgcctaat"
-        exon_locations = [("<1",">207")]
-        comp_strand = 0
-        codon_start = 1
+        temp_data =[("ABCB1",
+                     "HQ291662",
+                     "multidrug resistance protein 1", 
+                     "7q21.12", 
+                     "LLDGKEIKRLNVQWLRAHLGIVSQEPILFDCSIAENIAYGDNSRVVSQEEIVRAAKEANIHAFIESLPN",
+                     "ctgcttgatggcaaagaaataaagcgactgaatgttcagtggctccgagcacacctgggcatcgtgtcccaggagcccatcctgtttgactgcagcattgctgagaacattgcctatggagacaacagccgggtggtgtcacaggaagagatcgtgagggcagcaaaggaggccaacatacatgccttcatcgagtcactgcctaat",
+                     [("<1",">207")],
+                     0,
+                     1), 
+                    ("TCRG",
+                     "M13824",
+                     "T cell receptor gamma chain variable region",
+                     "7p15-p14",
+                     "MRWALLVLLAFLSPASQKSSNLEGRTKSVTRQTGSSAEITCDLTVTNTFYIHWYLHQEGKAPQRLLYYDVSTARDVLESGLSPGKYYTHTPRRWSWILRLQNLIENDSGVYYCATWRTNYYKKLFGSGTTLVVT",
+                     "aggaaggcatgcggtgggccctactggtgcttctagctttcctgtctcctggtgagtacgctgcctacagagaggctcacaggttgggttttgttttgttttcttcttgaaaggggtgccatacaaaggaatacctcattgtattttgtgttgttcccattgcagccagtcagaaatcttccaacttggaagggagaacgaagtcagtcaccaggcagactgggtcatctgctgaaatcacttgcgatcttactgtaacaaataccttctacatccactggtacctacaccaggaggggaaggccccacagcgtcttctgtactatgacgtctccaccgcaagggatgtgttggaatcaggactcagtccaggaaagtattatactcatacacccaggaggtggagctggatattgagactgcaaaatctaattgaaaatgattctggggtctattactgtgccacctggcggacgaattattataagaaactctttggcagtggaacaacacttgttgtcacaggtaagtatcggaagaatacaacatttccaaggtaatagagggaaggcaggaaatgattaaactggaataatgt",
+                     [("9","51"),("166",">525")],
+                     0,
+                     1)]
     # Search by chromosome location
     if data_type == "chro_loc":
         #temp_data = db_API."functionname"(searchfield) #to complete once db_api updated
-        dbgeneid = "ABCB1"
-        dbaccession = "HQ291662"
-        dbproduct = "multidrug resistance protein 1"
-        dblocation = "7q21.12"
-        dbtranslation = "LLDGKEIKRLNVQWLRAHLGIVSQEPILFDCSIAENIAYGDNSRVVSQEEIVRAAKEANIHAFIESLPN"
-        db_dna_seq = "ctgcttgatggcaaagaaataaagcgactgaatgttcagtggctccgagcacacctgggcatcgtgtcccaggagcccatcctgtttgactgcagcattgctgagaacattgcctatggagacaacagccgggtggtgtcacaggaagagatcgtgagggcagcaaaggaggccaacatacatgccttcatcgagtcactgcctaat"
-        exon_locations = [("<1",">207")]
-        comp_strand = 0
-        codon_start = 1 
+        temp_data =[("ABCB1",
+                     "HQ291662",
+                     "multidrug resistance protein 1", 
+                     "7q21.12", 
+                     "LLDGKEIKRLNVQWLRAHLGIVSQEPILFDCSIAENIAYGDNSRVVSQEEIVRAAKEANIHAFIESLPN",
+                     "ctgcttgatggcaaagaaataaagcgactgaatgttcagtggctccgagcacacctgggcatcgtgtcccaggagcccatcctgtttgactgcagcattgctgagaacattgcctatggagacaacagccgggtggtgtcacaggaagagatcgtgagggcagcaaaggaggccaacatacatgccttcatcgagtcactgcctaat",
+                     [("<1",">207")],
+                     0,
+                     1), 
+                    ("TCRG",
+                     "M13824",
+                     "T cell receptor gamma chain variable region",
+                     "7p15-p14",
+                     "MRWALLVLLAFLSPASQKSSNLEGRTKSVTRQTGSSAEITCDLTVTNTFYIHWYLHQEGKAPQRLLYYDVSTARDVLESGLSPGKYYTHTPRRWSWILRLQNLIENDSGVYYCATWRTNYYKKLFGSGTTLVVT",
+                     "aggaaggcatgcggtgggccctactggtgcttctagctttcctgtctcctggtgagtacgctgcctacagagaggctcacaggttgggttttgttttgttttcttcttgaaaggggtgccatacaaaggaatacctcattgtattttgtgttgttcccattgcagccagtcagaaatcttccaacttggaagggagaacgaagtcagtcaccaggcagactgggtcatctgctgaaatcacttgcgatcttactgtaacaaataccttctacatccactggtacctacaccaggaggggaaggccccacagcgtcttctgtactatgacgtctccaccgcaagggatgtgttggaatcaggactcagtccaggaaagtattatactcatacacccaggaggtggagctggatattgagactgcaaaatctaattgaaaatgattctggggtctattactgtgccacctggcggacgaattattataagaaactctttggcagtggaacaacacttgttgtcacaggtaagtatcggaagaatacaacatttccaaggtaatagagggaaggcaggaaatgattaaactggaataatgt",
+                     [("9","51"),("166",">525")],
+                     0,
+                     1)]
+    for each_entry in temp_data:
+        dbgeneid = each_entry[0]
+        dbaccession = each_entry[1]
+        dbproduct = each_entry[2]
+        dblocation = each_entry[3]
+        dbtranslation = each_entry[4] 
+        db_dna_seq = each_entry[5]
+        exon_locations = each_entry[6]
+        comp_strand = each_entry[7]
+        codon_start = each_entry[8]
     
-    import calc_exons as ce
-    coding_string = ce.calc_exons(db_dna_seq, exon_locations, comp_strand, codon_start)
+        import calc_exons as ce
+        coding_string = ce.calc_exons(db_dna_seq, exon_locations, comp_strand, codon_start)
     
-    codon_data = {}
-    import codon_useage as cu
-    codon_data = cu.codon_useage(coding_string)
+        codon_data = {}
+        import codon_useage as cu
+        codon_data = cu.codon_useage(coding_string)
     
-    import prot_gene_alignment as pga
-    alignment = pga.prot_gene_alignment(dbtranslation, coding_string)
+        import prot_gene_alignment as pga
+        alignment = pga.prot_gene_alignment(dbtranslation, coding_string)
     
-    if rest_enzyme_flag == 1:
-        import rest_enzyme_activity as r_e_a
-        renzyme_output = r_e_a.rest_enzyme_activity(db_dna_seq, rest_enzyme_name, exon_locations)
-    else:
-        renzyme_output = None
+        if rest_enzyme_flag == 1:
+            import rest_enzyme_activity as r_e_a
+            renzyme_output = r_e_a.rest_enzyme_activity(db_dna_seq, rest_enzyme_name, exon_locations)
+        else:
+            renzyme_output = None
     
     #Combining output
-    output_dictionary = {dbgeneid:([dbaccession, dbproduct, dblocation],[db_dna_seq, exon_locations], alignment, codon_data, renzyme_output)}
+        output_dictionary = {temp_data.index(each_entry):([dbgeneid, dbaccession, dbproduct, dblocation],[db_dna_seq, exon_locations], alignment, codon_data, renzyme_output)}
     
     return(output_dictionary)
 
+#testre = ("test", "gene_id", 1, "all")
+#print(frontend_input(testre))
 #------------------------------------------
 
 def getAllEntries():
