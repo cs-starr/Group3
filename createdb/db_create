@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
 
 """
-Program: Genebank parser
-Date Created: 1st of April 2022
+Program: Creating Database
+File: db_create.py
+Version: V1.0
+Date created: 01/04/2022
+Function: To create tables insert information into database
 Author: Janani Govindarasan
-Function: Grep relevant information from genebank file and populate mysql database. 
-Description:
-This program reads the genbank chromosome 7 file and regex the following for each entry:
-accession number, gene_id, location , product, CDS, amino acid sequence and dna sequence. 
-""""
+Database tier of implementation of a Chromosome (7) Browser
+This program contains functions that are used by db_parser.py to create tables and
+to insert information into database
+Usage: db_parser.py 
+"""
 
 
 import sys
