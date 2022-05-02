@@ -38,6 +38,17 @@ CDSsummary = "CREATE TABLE IF NOT EXISTS CDS
 		    CDS      VARCHAR(80)     NOT NULL,\
                     PRIMARY KEY (accession))
                  )"
+		
+		
+#creating DNA table     
+DNAsummary = "CREATE TABLE IF NOT EXISTS DNA
+                (
+                    accession      VARCHAR(100)     NOT NULL,\
+                    sequence     VARCHAR(80)     NOT NULL,\
+                    aa_seq      VARCHAR(80)     NOT NULL,\
+                    protein_id      VARCHAR(80)     NOT NULL,\
+                    PRIMARY KEY (accession))
+                 )"
 
 
 
