@@ -32,7 +32,7 @@ finally:
     
 
 #creating gene table 
-GENEsummary = "CREATE TABLE IF NOT EXISTS GENE
+GENEsummary = "CREATE TABLE IF NOT EXISTS GENE_TABLE
                 (
                     accession      VARCHAR(100)    NOT NULL,\
                     gene           VARCHAR(80)     NOT NULL,\
