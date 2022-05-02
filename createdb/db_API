@@ -50,7 +50,7 @@ def getgeneentries(gene):
 
  
     cursorObject        = connectionObject.cursor() 
-    sqlquery= 'SELECT gene.accession, gene.cds '
+    sqlquery= 'SELECT accession, CDS from CDS_TABLE '
     cursorObject.execute(sqlQuery)
     rows                = cursorObject.fetchall()
 
@@ -62,7 +62,7 @@ def getgeneentries(gene):
       Input:gene
     Output:Returns a dictionary for a specific gene.
     
-    return[("gene_id","accession_code","product","location","Translation","dna_seq")]
+    return[("accession","CDS")]
 
 
 
@@ -71,14 +71,14 @@ def getgeneentries(gene):
 def sequence(accession):
     
      cursorObject        = connectionObject.cursor() 
-    sqlquery= 'SELECT accession, sequence'
+    sqlquery= 'SELECT accession, sequence FROM dna'
     cursorObject.execute(sqlQuery)
     rows                = cursorObject.fetchall()
 
     for row in rows:
     yield(row)
 
-     return[("gene_id","accession","protein id","location","translation","dna seq")]
+     return[("gene_id","accession","protein id","location","translation","seq")]
     
     
     
