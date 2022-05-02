@@ -28,8 +28,8 @@ def frontend_input(request):
     Returns
     -------
     Dictionary with the following structure for key:value pair:
-        {index:([Gene name, Accession, Protein product name, Chromosomal location],[raw DNA sequence, Exon locations], alignment, codon_data, renzyme_output)}
-        index - int - 0 -> x (number of entries returned)
+        {index:([Gene name, Accession, Protein product name, Chromosomal location],[raw DNA sequence, Exon locations], alignment, codon_data, renzyme_output)}        
+        index 0->x (number of entries returned)
         Gene name - string - dictionary key
         [Accession, Protein product name, Chromosomal location] - 3 item list of string objects
         [raw DNA sequence, Exon locations] - 2 item list, of string oject and list of tuples (of length 1->x)
@@ -146,6 +146,8 @@ def frontend_input(request):
                      [("9","51"),("166",">525")],
                      0,
                      1)]
+    output_dictionary={}
+    
     for each_entry in temp_data:
         dbgeneid = each_entry[0]
         dbaccession = each_entry[1]
@@ -173,8 +175,9 @@ def frontend_input(request):
         else:
             renzyme_output = None
     
-    #Combining output
-        output_dictionary = {temp_data.index(each_entry):([dbgeneid, dbaccession, dbproduct, dblocation],[db_dna_seq, exon_locations], alignment, codon_data, renzyme_output)}
+    #Combining 
+
+        output_dictionary.update({temp_data.index(each_entry):([dbgeneid, dbaccession, dbproduct, dblocation],[db_dna_seq, exon_locations], alignment, codon_data, renzyme_output)})
     
     return(output_dictionary)
 
