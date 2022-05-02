@@ -31,7 +31,9 @@ import db_parser
 def all_genebank():
 
     cursorObject        = connectionObject.cursor() 
-    sqlquery= 'SELECT Accession, gene_id, location, dna_seq, aa_seq'
+    sqlquery= 'SELECT c.accession, c.gene, d.protein_id, d.sequence, d.aa_seq, c.chromosomal location' \
+              'FROM CDS c, DNA d '\
+              'WHERE c.accession = d.accession'
     cursorObject.execute(sqlquery)
     rows                = cursorObject.fetchall()
 
@@ -40,7 +42,7 @@ def all_genebank():
 
     connection.close()
     
-    return[('accession_number', 'gene_id', 'protein name','chromosomal location')]
+    return[('accession', 'gene', 'protein_id', 'sequence', 'aa_seq', 'chromosomal location')]
     
    
 #get gene entries
