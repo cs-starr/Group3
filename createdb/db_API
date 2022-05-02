@@ -152,7 +152,7 @@ def get_CDS():
   
     
    cursorObject        = connectionObject.cursor() 
-    sqlquery= 'SELECT Accession, CDS FROM CDS_TABLE '
+    sql = 'SELECT accession, CDS FROM CDS_TABLE'
     cursorObject.execute(sqlQuery)
     rows                = cursorObject.fetchall()
 
