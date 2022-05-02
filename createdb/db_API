@@ -14,7 +14,7 @@ Description:
 This program contains functions to retrieve relevent information from the database, searches database and returns
 matching entry details
 
-""""
+"""
 
 import pymysql
 import sys
