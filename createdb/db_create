@@ -28,16 +28,15 @@ GENEsummary = "CREATE TABLE IF NOT EXISTS GENE
                     PRIMARY KEY (accession))
                  )"
        
-DNAsummary ='''CREATE TABLE IF NOT EXISTS ORIGINS
-				    (   accession      VARCHAR(100)     NOT NULL,
-    					sequence      LONGTEXT     NOT NULL,
-    					PRIMARY KEY (accession),
-                                        FOREIGN KEY (accession)
-                                            REFERENCES GENE (accession)
-                                            ON DELETE CASCADE
-                                            ON UPDATE RESTRICT
-    					
-				    )ENGINE=InnoDB;'''
+DNAsummary ="CREATE TABLE IF NOT EXISTS ORIGINS
+		(   accession      VARCHAR(100)     NOT NULL,
+    		    sequence      LONGTEXT     NOT NULL,
+    		    PRIMARY KEY (accession),
+                    FOREIGN KEY (accession)
+                    REFERENCES GENE (accession)
+                    ON DELETE CASCADE
+                    ON UPDATE RESTRICT
+    		  )ENGINE=InnoDB;"
 
 
 
@@ -70,10 +69,3 @@ finally:
 
     
     
-
-
-
-
-
-
-
