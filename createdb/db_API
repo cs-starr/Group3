@@ -166,7 +166,7 @@ def get_geneid():
 def get_CDS():
 
    cursorObject        = connectionObject.cursor() 
-    sqlquery= 'SELECT Accession, gene_id, '
+    sqlquery= 'SELECT accession, gene FROM gene_table '
     cursorObject.execute(sqlQuery)
     rows                = cursorObject.fetchall()
 
