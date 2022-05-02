@@ -1,13 +1,19 @@
 #!/usr/bin/env python3
 
 """
-Program: Genebank parser
-Date Created: 1st of April 2022
+Program: database API
+File: db_API.py
+Data: 01/April/2022
+Function: To retrieve information from the database to middle layer
 Author: Janani Govindarasan
-Function: Grep relevant information from genebank file and populate mysql database. 
+Database tier of implementation of a Chromosome (7) Browse, searches database and returns
+matching entry details
+MSc. Bioinformatics, Birkbeck & UCL - BioComputing II
+Taught by: Dr. Andrew C.R. Martin. UCL
 Description:
-This program reads the genbank chromosome 7 file and regex the following for each entry:
-accession number, gene_id, location , product, CDS, amino acid sequence and dna sequence. 
+============
+This program contains functions to retrieve relevent information from the database, searches database and returns
+matching entry details
 """"
 
 import pymysql
