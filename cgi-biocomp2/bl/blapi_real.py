@@ -27,8 +27,9 @@ def frontend_input(request):
         
     Returns
     -------
-    Dictionary with the following structure for 1 key:value pair:
-        {Gene name:([Accession, Protein product name, Chromosomal location],[raw DNA sequence, Exon locations], alignment, codon_data, renzyme_output)}
+    Dictionary with the following structure for key:value pair:
+        {index:([Gene name, Accession, Protein product name, Chromosomal location],[raw DNA sequence, Exon locations], alignment, codon_data, renzyme_output)}        
+        index 0->x (number of entries returned)
         Gene name - string - dictionary key
         [Accession, Protein product name, Chromosomal location] - 3 item list of string objects
         [raw DNA sequence, Exon locations] - 2 item list, of string oject and list of tuples (of length 1->x)
@@ -45,8 +46,8 @@ def frontend_input(request):
                 midcut - int (0 - no mid exon cut, 1 - mid exon cut, 2 - no activity on DNA strand) - specific to the (start,stop) site
             renzyme_output[1] - {enzyme_name:overall_midcut}
                 overall_midcut - int (0 - activity present on DNA strand but suitable to isolate exons, 1 - enzyme not suitable to isolate exons)
-        
     """
+    
     ##Request is passed from frontend as 3 or 4 item iterable
     searchfield = request[0]
     data_type = request[1]
@@ -60,71 +61,58 @@ def frontend_input(request):
     
     # Search by gene ID
     if data_type == "gene_id":
+        
         temp_data = db_API.getgeneentries(searchfield)
        #["db_gene_id", "db_accession_code", "db_product", "db_location", "db_translation", "db_dna_seq"]  
        #also need exon_locations, comp_strand, codon_start
-        dbgeneid =
-        dbaccession =
-        dbproduct =
-        dblocation =
-        dbtranslation = 
-        db_dna_seq =
-        exon_locations =
-        comp_strand =
-        codon_start =
+
     # Search by accession number
     if data_type == "gen_acc":
         temp_data = db_API.sequence(searchfield)
-        #["gene_id","accession","protein id","location","translation","dna seq"]
-        dbgeneid =
-        dbaccession =
-        dbproduct =
-        dblocation =
-        dbtranslation = 
-        db_dna_seq =
-        exon_locations =
-        comp_strand =
-        codon_start =
+        #["db_gene_id", "db_accession_code", "db_product", "db_location", "db_translation", "db_dna_seq"]  
+        #also need exon_locations, comp_strand, codon_start
+        #may need to reformat depending on db_api output temp_data = [temp_data[0], temp_data[2], temp_data[1]...]
+
     # Search by protein product
     if data_type == "prot_prod":
         temp_data = db_API."functionname"(searchfield) #to complete once db_api updated
-        dbgeneid =
-        dbaccession =
-        dbproduct =
-        dblocation =
-        dbtranslation = 
-        db_dna_seq =
-        exon_locations =
-        comp_strand =
-        codon_start =
+       
     # Search by chromosome location
     if data_type == "chro_loc":
         temp_data = db_API."functionname"(searchfield) #to complete once db_api updated
-        dbgeneid =
-        dbaccession =
-        dbproduct =
-        dblocation =
-        dbtranslation = 
-        db_dna_seq =
-        exon_locations =
-        comp_strand =
-        codon_start =   
+         
     
-    import calc_exons as ce
-    coding_string = ce.calc_exons(db_dna_seq, exon_locations, comp_strand, codon_start)
+    for each_entry in temp_data:
+        dbgeneid = each_entry[0]
+        dbaccession = each_entry[1]
+        dbproduct = each_entry[2]
+        dblocation = each_entry[3]
+        dbtranslation = each_entry[4] 
+        db_dna_seq = each_entry[5]
+        exon_locations = each_entry[6]
+        comp_strand = each_entry[7]
+        codon_start = each_entry[8]
     
-    codon_data = {}
-    import codon_useage as cu
-    codon_data = cu.codon_useage(coding_string)
+        import calc_exons as ce
+        coding_string = ce.calc_exons(db_dna_seq, exon_locations, comp_strand, codon_start)
     
-    import prot_gene_alignment as pga
-    alignment = pga.prot_gene_alignment(dbtranslation, coding_string)
+        codon_data = {}
+        import codon_useage as cu
+        codon_data = cu.codon_useage(coding_string)
     
-    if rest_enzyme_flag == 1:
-        import rest_enzyme_activity as r_e_a
-        renzyme_output = r_e_a.rest_enzyme_activity(db_dna_seq, rest_enzyme_name, exon_locations)
-    else:
-        renzyme_output = None
+        import prot_gene_alignment as pga
+        alignment = pga.prot_gene_alignment(dbtranslation, coding_string)
+    
+        if rest_enzyme_flag == 1:
+            import rest_enzyme_activity as r_e_a
+            renzyme_output = r_e_a.rest_enzyme_activity(db_dna_seq, rest_enzyme_name, exon_locations)
+        else:
+            renzyme_output = None
+    
+    #Combining output
+        output_dictionary = {temp_data.index(each_entry):([dbgeneid, dbaccession, dbproduct, dblocation],[db_dna_seq, exon_locations], alignment, codon_data, renzyme_output)}
+    
+    return(output_dictionary)
     
     #Combining output
     output_dictionary = {dbgeneid:([dbaccession, dbproduct, dblocation],[db_dna_seq, exon_locations], alignment, codon_data, renzyme_output)}
@@ -157,7 +145,7 @@ def getAllcodon_use():
     return(total_codon_use.txt)
 
 #-----------------------------------------
-def rest_enzyme_list():
+def rest_enzyme_list:
     """
     This function passes a list of available restriction enzymes to the frontend.
     """
