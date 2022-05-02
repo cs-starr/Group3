@@ -24,6 +24,7 @@ import config as cf
 import pymysql.cursors
 import re
 import db_parser
+import db_create
 
 
 #Query accessing MySQL database to return gene information.
