@@ -1,5 +1,5 @@
+#!/usr/bin/python3.7.9
 # -*- coding: utf-8 -*-
-#!/usr/bin/python3
 
 """
 Created on Fri Apr 29 14:50:05 2022
@@ -37,7 +37,7 @@ def calc_exons(dna_seq, exon_locations, comp_strand, codon_start):
     working_exon_string = "".join(temp_exon_store)
     
     #Addressing whether the sequence begins after the given co-ordinates. 
-    #(Codon start is which nucleotide it start from with 1 being the co-ordinate given within te genbank file)
+    #(Codon start is which nucleotide it start from with 1 being the co-ordinated given)
     trim = (codon_start - 1) 
     final_exon_str = ""
     
@@ -62,3 +62,21 @@ def calc_exons(dna_seq, exon_locations, comp_strand, codon_start):
     final_exon_str = final_exon_str[trim:]
     
     return(final_exon_str)
+
+"""
+#Test code:
+ds = "aggaaggcatgcggtgggccctactggtgcttctagctttcctgtctcctggtgagtacgctgcctacagagaggctcacaggttgggttttgttttgttttcttcttgaaaggggtgccatacaaaggaatacctcattgtattttgtgttgttcccattgcagccagtcagaaatcttccaacttggaagggagaacgaagtcagtcaccaggcagactgggtcatctgctgaaatcacttgcgatcttactgtaacaaataccttctacatccactggtacctacaccaggaggggaaggccccacagcgtcttctgtactatgacgtctccaccgcaagggatgtgttggaatcaggactcagtccaggaaagtattatactcatacacccaggaggtggagctggatattgagactgcaaaatctaattgaaaatgattctggggtctattactgtgccacctggcggacgaattattataagaaactctttggcagtggaacaacacttgttgtcacaggtaagtatcggaagaatacaacatttccaaggtaatagagggaaggcaggaaatgattaaactggaataatgt"
+el =  [("9","51"),("166",">525")]
+cs = 0
+csod = 1
+
+ds2 = "ctgcttgatggcaaagaaataaagcgactgaatgttcagtggctccgagcacacctgggcatcgtgtcccaggagcccatcctgtttgactgcagcattgctgagaacattgcctatggagacaacagccgggtggtgtcacaggaagagatcgtgagggcagcaaaggaggccaacatacatgccttcatcgagtcactgcctaat"
+el2 =  [("<1",">3")]
+cs2 = 0
+csod2 = 1
+print(calc_exons(ds,el,cs,csod))
+print(len(calc_exons(ds,el,cs,csod)))
+print("space-------")
+print(calc_exons(ds2,el2,cs2,csod2))
+print(len(calc_exons(ds2,el2,cs2,csod2)))
+"""
