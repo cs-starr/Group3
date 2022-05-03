@@ -1,25 +1,30 @@
+#!/usr/bin/python3.7.9
 # -*- coding: utf-8 -*-
-#!/usr/bin/python3
+
 """
-Created on Fri Apr 29 14:49:28 2022
-This is the script to run the calculation for all codon useage statistics within the database
+Created on Fri Apr 29 14:51:00 2022
+This function calculates all coding regions within the database
+
 @author: angli
+
 """
+
 def runAllcodon_use():
     """
-    This function is a one time run event.  To calculate all coding regions within the database
-    and to calculate
-
+    This function process all entries from the database, calculating the codon useage for each gene.
+    This data is collated and written to a text file using a for loop, presenting information in format (and order):
+        codon, amino acid code, raw counts and percentage use
+    " " is given as a separator between data items, "\n" separates each codon entry.
+    
     Returns
     -------
-    Writes data into a text file. (name TBD)
-    (Need to include - date/time of calculation)
+    Writes data into a text file, stored in the same directory
+    Returns a confirmatory message :"Calculation complete"
     """
-    import getgetAllEntries
     import bl_api
-    import db_API
-    import calc_exons
-    
+    import db_api
+    import calc_exons as ce
+
     #Set up codon counter
     master_codon_tuples = [
         ("ATT","I"), ("ATC", "I"), ("ATA", "I"),
@@ -53,22 +58,22 @@ def runAllcodon_use():
     
     #iterating on accession number
     #db_API output: return[('accession_number', 'gene_id', 'protein name','chromosomal location')]
-    master_exon_list = []
+    master_coding_string_list = []
     
     for acc_number in entry_list[0]:
-        temp_data = db_API.sequence(acc_number)
-        dna_seq = temp_data["a"] #expecting string
-        exon_locations = temp_data["x"] #expecting list of tuples
-        comp_strand = temp_data["y"] #expecting comp strand location
-        codon_start = temp_data["z"] #expecting codon start loc
-        exon_str = calc_exons(dna_seq, exon_locations, comp_strand, codon_start
-        master_exon_list.append(exon_str)
+        temp_data = db_api.sequence(acc_number)
+        dna_seq = temp_data[w] #expecting string
+        exon_locations = temp_data[x] #expecting list of tuples
+        comp_strand = temp_data[y] #expecting comp strand location
+        codon_start = temp_data[z] #expecting codon start loc
+        exon_str = ce.calc_exons(dna_seq, exon_locations, comp_strand, codon_start)
+        master_coding_string_list.append(exon_str)
     
-    #break down each exon into individual codons
-    for exon in master_exon_list :
-        raw_seq = exon.upper()
+    #break down each coding_string into individual codons
+    for coding_string in master_coding_string_list :
+        raw_seq = coding_string().upper()
         len_rs = len(raw_seq)
-        exp_iter = int(len_rs/3)
+        exp_iter = len_rs//3
         current_iter = 0
         seq_slice = slice(0,3)
         
@@ -92,10 +97,6 @@ def runAllcodon_use():
     total_count = 0
     for (codon_info) in master_codon_counter:
         total_count = total_count + codon_info[2] 
-    
-    total_count = 0
-    for (codon_info) in master_codon_counter:
-        total_count = total_count + codon_info[2]
     
     with open("total_codon_use.txt", 'w') as tcu:
         for (codon_info) in master_codon_counter:
