@@ -47,6 +47,8 @@ def rest_enzyme_activity(dna_seq, rest_enzyme, input_exon_locations):
         enzyme_target_seq.append(("gaattc", "ecor1"))
         enzyme_target_seq.append(("ggatcc", "bamh1"))
         enzyme_target_seq.append(("ctcgag", "bsum"))
+    else:
+        return(("The specified restriction enzyme does not exist",""))
     
     dna_seq = dna_seq.lower()
     enzyme_activity_dict = {} #storing enzyme name (key) against activity locations (list of tuples)
@@ -105,9 +107,12 @@ def rest_enzyme_activity(dna_seq, rest_enzyme, input_exon_locations):
 dns = "aaagaattccccaaacccaaacccaaagaattc" #This showcases where ecor1 does not cut within the exon region
 dns2 = "aaagaattccccaaacgaattcccaaacccaaagaattc" #This showcases where ecor1 cuts within the exon region
 rest_enz = "all"
+rest_enz2 = "entry not present"
 iel = [("11","13"),("15","17")]
 t = (rest_enzyme_activity(dns, rest_enz, iel))
 print(t[0],t[1])
 m = (rest_enzyme_activity(dns2, rest_enz, iel))
 print(m[0],m[1])
+q = (rest_enzyme_activity(dns2, rest_enz, iel))
+print(q[0],q[1])
 """
