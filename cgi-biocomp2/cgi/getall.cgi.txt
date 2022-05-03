@@ -1,0 +1,86 @@
+#!/usr/bin/env python3
+
+import cgi;
+
+# Useful debugging output
+import cgitb
+cgitb.enable()  # Send errors to browser
+# cgitb.enable(display=0, logdir="/path/to/logdir") # log errors to a file
+
+#Enter your personal URL here: 
+p_url = "http://http://student.cryst.bbk.ac.uk/cgi-bin/cgiwrap/sc004/"
+#make url to view details page
+url = p_url + "details.cgi"
+#If I weren't writing dummy code, I would import this function from the module blapi_real.py
+def getAllEntries():
+    """
+    This is a dummy version of the function used to make a functional webpage.
+    In the business layer it calls db_api.all_genebank(), which has 
+    Output of the form: [('accession_number', 'gene_id', 'protein name','chromosomal location')]
+    Returns
+    -------
+    """   
+    entry1 = ("HQ291662","ABCB1","multidrug resistance protein 1", "7q21.12")
+    entry2 = ("M13824","TCRG","T cell receptor gamma chain variable region","7p15-p14")
+    
+    entries = [entry1,entry2] 
+    return(entries)
+
+def make_table(var): 
+    """
+    Function that makes a table when given a list of lists. 
+    Input: a list of lists
+    Output: lines of html
+    """
+    code = "<p>| Genbank accession | Gene ID | Protein product | chromosome location |</p>\n"
+    
+    for row in var: 
+        line = "<p>|"
+        for term in row: 
+            line += " " + term + " |"
+        line += "</p>\n"
+        code += line
+    
+    return(code)
+
+    
+results = getAllEntries()
+table = make_table(results)
+id_list = [line[1] for line in results]
+# Print the HTML MIME-TYPE header
+print ("Content-Type: text/html\n")
+
+
+html = "<html>\n"
+html += "<head>\n"
+
+html += "<title>Summary gene list</title>\n"
+html += "</head>\n\n"
+
+html += "<body>\n"
+
+
+html += "<h2>Summary list of all gene identifiers</h2>\n"
+
+html += table 
+
+html += "<form action=" + url +" method='post'>"
+
+html += "<p><b>Choose gene to see details of:</b></p>"
+html += "<p>" 
+html += "<input name='gene_id' value="+id_list[0]+" type='radio' checked='checked' />" + id_list[0]
+for id in id_list[1:]: 
+    html += "&nbsp;&nbsp;&nbsp;"
+    html += "<input name='gene_id' value="+id+" type='radio' />" + id
+html += "</p>"
+html += "<p>"
+html += "<input type='submit' value='Submit' />"
+html += "</p>"
+html += "</form>"
+html += "</body>\n"
+html += "</html>\n"
+
+
+print (html)
+
+
