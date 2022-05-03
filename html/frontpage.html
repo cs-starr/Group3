@@ -1,0 +1,68 @@
+<html>
+<head>
+<style type='text/css'>
+<!--
+body {background: #ffffff;
+      font-family: 'Courier New', monospace;
+      color: #333333;
+      border: none;
+      margin: 10pt;
+      padding: 0pt;
+     }
+-->
+</style>
+
+<title>Biocomputing 2 Group 3 Project</title>
+</head>
+
+<body>
+
+<h2>Genome browser for human chromosome 7</h2>
+
+<h3><a href='http://http://student.cryst.bbk.ac.uk/cgi-bin/cgiwrap/sc004/getall.cgi'>View summary list of genes</a></h3>
+
+<!-- For Birkbeck you will need to change the action='....' to
+     http://http://student.cryst.bbk.ac.uk/cgi-bin/cgiwrap/USERNAME/form.cgi
+     replacing USERNAME as appropriate
+-->
+<h3>Search for entries</h3>
+<p>The following form allows you to search the database for entries based on gene identifier, protein product names, Genbank accession, or chromosomal location.You can also select restriction enzymes.</p> 
+<form
+action='http://http://student.cryst.bbk.ac.uk/cgi-bin/cgiwrap/sc004/search.cgi'
+method='post'>
+<p><b>Search Term</b><br />
+<input name='term' type='text' size='25' /></p>
+
+<p><b>Search by:</b></p>
+<p>
+<input name='method' value='gene_id' type='radio' checked='checked' />Gene identifier
+&nbsp;&nbsp;&nbsp;
+<input name='method' value='prot_prod'     type='radio' />Protein product names 
+&nbsp;&nbsp;&nbsp;
+<input name='method' value='gen_acc'     type='radio' />Genbank accession 
+&nbsp;&nbsp;&nbsp;
+<input name='method' value='chro_loc'     type='radio' />Chromosomal location
+</p>
+
+<p><b>Restriction enzyme options:</b><br /></p>
+<p>
+<input name='r_enz' value='all' type='radio' checked='checked' />All
+&nbsp;&nbsp;&nbsp;
+
+<input name='r_enz' value='ecor1'     type='radio' />EcoR1 
+&nbsp;&nbsp;&nbsp;
+<input name='r_enz' value='bamh1'     type='radio' />BamH1
+&nbsp;&nbsp;&nbsp;
+<input name='r_enz' value='bsum'     type='radio' />BsuM1
+</p>
+
+<p>
+<input type='submit' value='Submit' />&nbsp;&nbsp;
+<input type='reset'  value='Clear form' />
+</p>
+
+</form>
+
+<p>This website was created for the Birkbeck Bioinformatics Biocomputig 2 modules's group project. It was made by Group 3, which consisted of Janani Govind who made the database, Ang Li who made the business logic tier, and Coco Starr who made the front end. </p>
+</body>
+</html>
