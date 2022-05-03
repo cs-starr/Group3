@@ -1,0 +1,83 @@
+1. Approach to the project
+
+1.1 Interaction with the team: 
+Janani: I didn't interact with her very much because I did the front end
+and she did the database. She would sometimes not respond to mine and Ang's emails. 
+Ang: He was good to work with, although like me (but not to the same extent) he put
+off working on the project until shortly before it was due. He was responsive to my 
+emails, provided me with testing data, and was helpful and supportive when I had issues.
+ 
+1.2 Overall project requirements: 
+During the first group project based class the three of us met and discussed 
+which roles we were willing to take. I volunteered to take the front end even though I 
+didn't want to, because the others didn't want it and I obligated to take the
+responsibilty as the strongest (in terms of Biocomputing 1 grades) programmer in our
+group. 
+In the second group project centred class I discussed with Ang (Janani was absent)
+what form the website should take, and we put our observations in a google doc. 
+Then I discussed the API with them after the presentation, because the two of them
+were absent that day. 
+We did not have the weekly meetings recommended by the project guidance. 
+
+1.3 Requirements for my contribution: 
+I was the front end person, and I also made the github repository. My responsibilty 
+was to created html and cgi pages which displayed the information laid out in the 
+project requirements, communicated with each other, coominucated with the business layer,
+and were put together with symbolic links. I only accomplished the first item in this 
+list. 
+What happened is that I took a few weeks off, then I was quite badly ill for a bit. 
+By the time I recovered I realised I only had a few days to do the whole project, 
+and I became overwhelmed with stress. The most stressful thing was figuring out
+how to get the layers to communicate, and how to make the website with the relative 
+links. I did manage to make a dummy website with symbolic links as instructed in the
+skeleton repository, but then I couldn't figure out how to edit it. In the end I 
+decided it would be better to make a completely static website that at least displays
+the information requested in the project guidance, rather than not anything at all 
+because I was too stressed. 
+This is why I made the website in my WWW directory, and why I didn't call the 
+business layer. Although I did make dummy versions of business layer functions
+and I made their input and output match the actual business layer functions.
+
+2. Performance of the development cycle: 
+I didn't perform the development cycle because I wrote all my code in a rush over 24 hours. 
+This was obviously unpleasant. It was also a shame I didn't carry out the cycle 
+properly because I lost the oppertunity to have my teammates give feedback on my work. 
+I also realised that the business layer functions used more dictionaries than I found
+useful, but I couldn't ask Ang to change the functions at such short notice before the 
+deadline. 
+
+3. The development process:
+I based most of my html and cgi code on examples provided by Dr Martin. I also had to make 
+sure my code matched the functions the others wrote. For each page, I thought about what it needed to do. 
+Then I wrote functions and procedures until the page did as I thought necessary. 
+My strategy for the details.cgi, which was the most complex page, was to develop the functions I needed 
+one at a time in a Jupyter notebook cell, make sure they worked as I thought they should, and then 
+integrate them one at a time into the script. 
+
+4. Code testing: 
+I tested my code after every small change I made by using /.[script name].cgi in the command line, and by 
+refreshing the web page. I tested frequently because I was very nervous about my pages not working,
+and because I tested frequently it was easy to find and fix mistakes. This ease of testing came after I had
+given up on having my webpages communicate with each other. 
+
+5. Known issues: 
+The biggest issue is that my scripts do not communicate with the business layer and database. 
+Perhaps as bad is the fact they don't communicate with each other. I got key errors using cgi.FieldStorage 
+just copy pasting Dr Martin's code, and it was getting too stressful, so I gave up on gathering form content 
+in the interest of having something to submit. 
+
+6. What worked and what didn't - problems and solutions: 
+What doesn't work is ignoring things until the absolute last minute because you're scared of them, because that close to the end
+there's not enough time to ask for help when you're having issues. 
+I was pleased with the details page, because the information I was asked to present was complex (especially involving the
+restriction enzymes), but I managed to display it all in the end. Especially because I am not comfortable/familiar with web 
+design. 
+
+7. Alternative strategies: 
+If I could do it again I would follow all the advice that is laid out very clearly in the coursework guidance about the importance
+of having a project leader, meeting regularly, and having a working dummy API by week 3. 
+
+8. Personal insights: 
+I have a bad habit of not submitting work because I am paralysed with stress. But even though I was panicing a lot, I still managed
+to write some pages that displayed the relevant information, so that is something to be pleased with. 
+I also learnt the importance of doing things when you are advised to do them. 
