@@ -1,21 +1,18 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/python3
-
 """
-Created on Sun 01 May 2022 14:36
-This is the script for calculation of restriction enzyme activity
+Created on Fri Apr 29 14:50:43 2022
+This function searches a genetic sequence for restriction enzyme activity and identifieds enzymes
+with activity outside of the exon start/stop region.
 @author: angli
 """
 
 def rest_enzyme_activity(dna_seq, rest_enzyme, input_exon_locations):
 
     """
-    This function searches a genetic sequence for restriction enzyme activity and identifieds enzymes
-    with activity outside of the exon start/stop region.
-    
     Inputs
     -------
-    genetic sequence in string format
+    genetic sequence - str
     restriction enzyme - str - EcoR1, BamH1, BsuM1, all
     input_exon_locations - list of tuples
 
@@ -32,11 +29,11 @@ def rest_enzyme_activity(dna_seq, rest_enzyme, input_exon_locations):
     
     """
     Additional notes
-    EcoR1- forward GAATTC, complementary CTTAA/G
-    BAMH1 - forward GGATCC, complementary CCTAG/G
+    EcoR1- forward GAATTC, complementary CTTAAG
+    BAMH1 - forward GGATCC, complementary CCTAGG
     BsuM - forward CTCGAG, complementary CTCGAG
     Most restriction enzymes are palindromes, therefore no need to specify/search on complementary strand based on entry requirements.
-    Modifications to code may be required for non palindromic REs
+    Modifications to code may be required fro non palindromic REs
     """
     import re
     enzyme_target_seq = []
@@ -51,6 +48,7 @@ def rest_enzyme_activity(dna_seq, rest_enzyme, input_exon_locations):
         enzyme_target_seq.append(("ggatcc", "bamh1"))
         enzyme_target_seq.append(("ctcgag", "bsum"))
     
+    dna_seq = dna_seq.lower()
     enzyme_activity_dict = {} #storing enzyme name (key) against activity locations (list of tuples)
     for (e_seq, e_name) in enzyme_target_seq:
     ##The following code identifies any RE site
@@ -84,8 +82,7 @@ def rest_enzyme_activity(dna_seq, rest_enzyme, input_exon_locations):
                 else:
                     enz_store.append([(enzyme_start, enzyme_stop), 1])
                 enzyme_activity_dict[e_name] = enz_store
-                ##Needs additional code to calculate whether there is any interference.  Planned
-                ##as
+
         else:
             enz_store=[(("No","activity"),2)]
             enzyme_activity_dict[e_name] = enz_store #expand on if no match found
@@ -101,3 +98,16 @@ def rest_enzyme_activity(dna_seq, rest_enzyme, input_exon_locations):
         else:
             interference_output.append((e_name, 1))
     return(enzyme_activity_dict, interference_output) 
+
+"""
+#testcode
+
+dns = "aaagaattccccaaacccaaacccaaagaattc" #This showcases where ecor1 does not cut within the exon region
+dns2 = "aaagaattccccaaacgaattcccaaacccaaagaattc" #This showcases where ecor1 cuts within the exon region
+rest_enz = "all"
+iel = [("11","13"),("15","17")]
+t = (rest_enzyme_activity(dns, rest_enz, iel))
+print(t[0],t[1])
+m = (rest_enzyme_activity(dns2, rest_enz, iel))
+print(m[0],m[1])
+"""
