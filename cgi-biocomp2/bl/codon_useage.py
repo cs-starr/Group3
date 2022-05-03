@@ -1,5 +1,5 @@
+#!/usr/bin/python3.7.9
 # -*- coding: utf-8 -*-
-#!/usr/bin/python3
 
 """
 Created on Fri Apr 29 14:52:10 2022
@@ -14,6 +14,11 @@ The function returns a dictionary with codon:data format as detailed below.
 
 def codon_useage(coding_dna_sequence):
     """
+    This is the script for calculating codon useage within a DNA sequence.
+    The script assumes that the DNA sequence is a coding sequence with introns removed
+    prior to analysis.
+    The function returns a dictionary with codon:data format as detailed below.
+    
     Parameters
     ----------
     coding_dna_sequence : str
@@ -34,22 +39,25 @@ def codon_useage(coding_dna_sequence):
     raw_seq = coding_dna_sequence.upper()
     
     len_rs = len(raw_seq)
-    exp_iter = int(len_rs/3)
+    exp_iter = len_rs//3
     current_iter = 0
     seq_slice = slice(0,3)
     
     codon_list = []
     
+    #Iterates through the string in triplet slices, producing 'codons'.
     while current_iter != exp_iter:
         codon = raw_seq[seq_slice]
         codon_list.append(codon)
         if codon == "TAA" or codon == "TAG" or codon == "TGA":
+            #This checks for any stop codons that have made it into the coding strand.
             break
         raw_seq = raw_seq[3:]
         current_iter += 1
     
     seq_total_codons = len(codon_list)
     
+    # Creation of a counter of each codon
     k = Counter(codon_list)
         
     master_codon_tuples = [
@@ -76,13 +84,16 @@ def codon_useage(coding_dna_sequence):
         ("TAA", "Stop"), ("TAG", "Stop"), ("TGA", "Stop")
         ]
     
+    #Iterate through the codon master list, and obtain the count from the counter list
     codon_use_data={}
     for (i,j) in master_codon_tuples:
         codon_use_data.update({i:(k[i],j, (k[i]/seq_total_codons)*100)})
     
     return(codon_use_data)
 
+"""
 #Test data
-#dna = "ctgcttgatggcaaagaaataaagcgactgaatgttcagtggctccgagcacacctgggcatcgtgtcccaggagcccatcctgtttgactgcagcattgctgagaacattgcctatggagacaacagccgggtggtgtcacaggaagagatcgtgagggcagcaaaggaggccaacatacatgccttcatcgagtcactgcctaat"
-#test = codon_useage(dna)
-#print(test)
+dna = "ctgcttgatggcaaagaaataaagcgactgaatgttcagtggctccgagcacacctgggcatcgtgtcccaggagcccatcctgtttgactgcagcattgctgagaacattgcctatggagacaacagccgggtggtgtcacaggaagagatcgtgagggcagcaaaggaggccaacatacatgccttcatcgagtcactgcctaat"
+test = codon_useage(dna)
+print(test)
+"""
