@@ -1,0 +1,72 @@
+CGI documentation:
+ 
+How to use the website: 
+The website has some glitches you have to push through to view it. 
+When you access one of the cgi pages via a link, the page might have to be refreshed several times before you can actually view it.
+On chrome, clicking the link to the cgi pages adds an exta http to the url which has to be deleted. 
+
+Upon loading the front page (frontpage.html), there is the option to either view all entries or
+search the database by either gene identifier, protein product name, Genbank accession,
+or chromosomal location. 
+You can also choose if you want to look at the sticky end restriction sites for EcoRi
+BamHI, BsuMi, or all three. 
+
+If you select "summary list of genes", you are taken to a page (getall.cgi)
+which displays the gene identifiers, protein product name, Genbank accession, and chromosomal location. 
+You then have the option to select by gene identifier what gene you would like to see 
+the details of. 
+
+If you use the search form, you are taken to a page (search.cgi) which shows all the genes that came 
+up in your list. They are displayed again by gene identifiers, protein product name,
+Genbank accession, and chromosomal location. Again, you then have the option to select by gene identifier
+what gene you would like to see the details of. 
+
+For both getall.cgi and search.cgi, when you select "Choose gene to see details of", you are taken to details.cgi. 
+This is done by performing a search by the gene identifier, because I assumed that it is unique for humans. 
+I was not able to test the database and see if this was the case. 
+Once you are on details.cgi, you again get to see the gene identifier, protein product name, Genbank accession, and chromosome 
+location of the gene. 
+You also get to see the amino acid and base sequence of the gene. Exon coding regions are highlighted in yellow. 
+Regions that are excised by the selected restriction enzymes are highligted. The page also tells you if the selected 
+enzymes would be appropriate for excising exons. 
+
+In reality, all of the information the web pages displays are hard coded, so it does not make a difference what you select or
+search for, what the next page displays will still be the same. 
+
+How to install the website: 
+The site is done with hard links. So if you want to install the dummy website, you should download frontpage.html, getall.cgi,
+search.cgi, and details.cgi. Place frontpage.html within your WWW directory, and the .cgi scripts in the cgi-bin within your 
+WWW directory. 
+For frontpage.html, you have to change completely change the links on lines 23 and 31 to ones that correspond to your personal directory. 
+For search.cgi and getall.cgi, you just change change p_url on line 11 to a url pointing to your personal directory. 
+You don't also have to type the name of the CGI scripts. 
+details.cgi does not link to any other CGI scripts, so it does not have to be changed upon install. 
+
+
+How the website communicates to the business layer: 
+It doesn't. I couldn't do anything for the vast majority because I was too stressed about how to get the website to connect 
+to the other layers. So in the end I decided it be better to have a dummy website that doesn't
+connect to the layers, rather than no website at all. 
+The business layer functions I pretended to call were: 
+
+blapi_real.getAllEntries()
+I used this function to populate .getall.cgi. 
+I wrote a function called make_table() that turned the output of this function into an html table. 
+
+blapi_real.frontend_input()
+I used this function in two ways. 
+For search.cgi, I just extracted the first entry from the output( a list of the summary information) and turned it into a 
+html table using another function called make_table(). 
+
+For details.cgi, I used the entire output of this function to populate the page. 
+I used the first entry (a list of summary information) to again display the summary information in a table using a function called
+make_table(). 
+I used the second half of the second entry to extract the exon locations. I used a function called add_coding() to insert highlighting
+html tags into the codons, to indicate the exons. 
+The third entry was a list of dubples of amino acid codons and their corresponding triplet bases. I turn this input into html
+output with a function called gene_browser. It formatted the codons into two html paragraphs, one for the protein sequence
+and one for the dna sequence.
+The fourth entry was a dictionary containing information about restriction enzymes. I used a function called add_restriction()
+to insert underlining html tags into the codons, to indicate which parts of the sequence are removed by the restriction enzyme.  
+
+Semantic Markup: None was used.
