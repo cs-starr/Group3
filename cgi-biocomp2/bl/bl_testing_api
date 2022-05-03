@@ -2,8 +2,9 @@
 #!/usr/bin/python3
 
 """
-Created on Sun May  1 14:46:58 2022
-This is a testing enviroment BLAPI
+Created on Sun May 1 14:46:58 2022
+This is a testing enviroment business layer API, this is designed to allow the front end to access the business layer and test the input/output process.
+This script also tests the business layer only modules
 @author: angli
 """
 
@@ -181,6 +182,7 @@ def frontend_input(request):
     
     return(output_dictionary)
 
+# Test code
 #testre = ("test", "gene_id", 1, "all")
 #print(frontend_input(testre))
 #------------------------------------------
