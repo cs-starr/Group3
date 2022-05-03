@@ -1,10 +1,9 @@
+#!/usr/bin/python3.7.9
 # -*- coding: utf-8 -*-
-#!/usr/bin/python3
 
 """
-Created on Sun May 1 14:46:58 2022
-This is a testing enviroment business layer API, this is designed to allow the front end to access the business layer and test the input/output process.
-This script also tests the business layer only modules
+Created on Sun May  1 14:46:58 2022
+This is a testing enviroment BLAPI
 @author: angli
 """
 
@@ -147,6 +146,7 @@ def frontend_input(request):
                      [("9","51"),("166",">525")],
                      0,
                      1)]
+        
     output_dictionary={}
     
     for each_entry in temp_data:
@@ -182,9 +182,11 @@ def frontend_input(request):
     
     return(output_dictionary)
 
-# Test code
-#testre = ("test", "gene_id", 1, "all")
-#print(frontend_input(testre))
+#test data
+testre = ("test", "gene_id", 1, "all")
+print(frontend_input(testre))
+
+
 #------------------------------------------
 
 def getAllEntries():
@@ -195,7 +197,7 @@ def getAllEntries():
     Returns
     -------
     """    
-    #import db_API
+    import db_API
     return(db_api.all_genebank())
 
 #------------------------------------------
