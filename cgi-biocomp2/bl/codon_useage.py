@@ -1,11 +1,34 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/python3
+
 """
 Created on Fri Apr 29 14:52:10 2022
-This is the script for calculation of codon useage within a sequence
+
+This is the script for calculating codon useage within a DNA sequence.
+The script assumes that the DNA sequence is a coding sequence with introns removed
+prior to analysis.
+The function returns a dictionary with codon:data format as detailed below.
+
 @author: angli
 """
+
 def codon_useage(coding_dna_sequence):
+    """
+    Parameters
+    ----------
+    coding_dna_sequence : str
+        
+
+    Returns
+    -------
+    A dictionary in the format:
+        {codon : (count, amino_acid, percentage_use)}
+        codon - str (key)
+        count - int
+        amino_acid - str
+        percentage_use - float
+
+    """
     from collections import Counter
     
     raw_seq = coding_dna_sequence.upper()
@@ -27,7 +50,7 @@ def codon_useage(coding_dna_sequence):
     
     seq_total_codons = len(codon_list)
     
-    count_of = Counter(codon_list)
+    k = Counter(codon_list)
         
     master_codon_tuples = [
         ("ATT","I"), ("ATC", "I"), ("ATA", "I"),
@@ -54,7 +77,12 @@ def codon_useage(coding_dna_sequence):
         ]
     
     codon_use_data={}
-    for (m_codon, AA) in master_codon_tuples:
-        codon_use_data.update({m_codon:(count_of[m_codon], AA, (count_of[m_codon]/seq_total_codons)*100)})
+    for (i,j) in master_codon_tuples:
+        codon_use_data.update({i:(k[i],j, (k[i]/seq_total_codons)*100)})
     
     return(codon_use_data)
+
+#Test data
+#dna = "ctgcttgatggcaaagaaataaagcgactgaatgttcagtggctccgagcacacctgggcatcgtgtcccaggagcccatcctgtttgactgcagcattgctgagaacattgcctatggagacaacagccgggtggtgtcacaggaagagatcgtgagggcagcaaaggaggccaacatacatgccttcatcgagtcactgcctaat"
+#test = codon_useage(dna)
+#print(test)
