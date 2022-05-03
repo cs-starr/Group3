@@ -1,36 +1,72 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/python3
+
 """
-Created on Fri Apr 29 14:52:10 2022
-This is the script to produce a protein sequence: gene sequence alignment
+Created on Sat Apr 30 12:37:54 2022
+This function
 @author: angli
 """
+
 def prot_gene_alignment(protein_seq, gene_sequence):
     """
     This function takes in a protein sequence and genomic sequence and aligns them.
-    If there is mismatch in length, the alignment does not occur.
+    If there is mismatch, the function will attempt to match up to any codon discrepancy.
 
     Parameters
     ----------
     protein_seq : str
-        DESCRIPTION.
+        The protein sequence to be aligned
     gene_sequence : str
-        DESCRIPTION.
+        DThe DNA sequence to be aligned
 
     Returns
     -------
     List of tuples of format (amino acid, codon)
     """
-        alignment_list =[]
+    master_codon_tuples = [
+        ("ATT","I"), ("ATC", "I"), ("ATA", "I"),
+        ("CTT", "L"), ("CTC", "L"), ("CTA", "L"), ("CTG", "L"), ("TTA", "L"), ("TTG", "L"),
+        ("GTT", "V"), ("GTC", "V"), ("GTA", "V"), ("GTG", "V"),
+        ("TTT", "F"), ("TTC", "F"),
+        ("ATG", "M"),
+        ("TGT", "C"), ("TGC", "C"),
+        ("GCT", "A"), ("GCC", "A"), ("GCA", "A"), ("GCG", "A"),
+        ("GGT", "G"), ("GGC", "G"), ("GGA", "G"), ("GGG", "G"),
+        ("CCT", "P"), ("CCC", "P"), ("CCA", "P"), ("CCG", "P"),
+        ("ACT", "T"), ("ACC", "T"), ("ACA", "T"), ("ACG", "T"),
+        ("TCT", "S"), ("TCC", "S"), ("TCA", "S"), ("TCG", "S"), ("AGT", "S"), ("AGC", "S"),
+        ("TAT", "Y"), ("TAC", "Y"),
+        ("TGG", "W"),
+        ("CAA", "Q"), ("CAG", "Q"),
+        ("AAT", "N"), ("AAC", "N"),
+        ("CAT", "H"), ("CAC", "H"),
+        ("GAA", "E"), ("GAG", "E"),
+        ("GAT", "D"), ("GAC", "D"),
+        ("AAA", "K"), ("AAG", "K"),
+        ("CGT", "R"), ("CGC", "R"), ("CGA", "R"), ("CGG", "R"), ("AGA", "R"), ("AGG", "R"),
+        ("TAA", "Stop"), ("TAG", "Stop"), ("TGA", "Stop")
+        ]
+    alignment_list =[]
     if len(protein_seq) != (len(gene_sequence)/3):
-        alignment_list.append("ERROR: The sequences cannot be aligned")
-    else:
         for i in range(0,len(protein_seq)):
-            alignment_list.append((protein_seq[i], gene_sequence[i*3:(i*3)+3].upper()))
-    return(alignment_list)
+            if (gene_sequence[i*3:(i*3)+3].upper(),protein_seq[i]) in master_codon_tuples:
+                alignment_list.append((protein_seq[i], gene_sequence[i*3:(i*3)+3].upper()))
+            else:
+                break
+        #The for loop allows for potential counting of which position the break has occured.
+    else:
+         for i in range(0,len(protein_seq)):
+             if (gene_sequence[i*3:(i*3)+3].upper(),protein_seq[i]) in master_codon_tuples:
+                 alignment_list.append((protein_seq[i], gene_sequence[i*3:(i*3)+3].upper()))
     
-#-----------------------
+    return(alignment_list)
+
+"""
 #Test code
-#ps = "LLDGKEIKRLNVQWLRAHLGIVSQEPILFDCSIAENIAYGDNSRVVSQEEIVRAAKEANIHAFIESLPN"
-#gs  = "ctgcttgatggcaaagaaataaagcgactgaatgttcagtggctccgagcacacctgggcatcgtgtcccaggagcccatcctgtttgactgcagcattgctgagaacattgcctatggagacaacagccgggtggtgtcacaggaagagatcgtgagggcagcaaaggaggccaacatacatgccttcatcgagtcactgcctaat"
-#test = prot_gene_alignment(ps, gs)
+ps = "LLDGKEIKRLNVQWLRAHLGIVSQEPILFDCSIAENIAYGDNSRVVSQEEIVRAAKEANIHAFIESLPN"
+gs  = "ctgcttgatggcaaagaaataaagcgactgaatgttcagtggctccgagcacacctgggcatcgtgtcccaggagcccatcctgtttgactgcagcattgctgagaacattgcctatggagacaacagccgggtggtgtcacaggaagagatcgtgagggcagcaaaggaggccaacatacatgccttcatcgagtcactgcctaat"
+test = prot_gene_alignment(ps, gs)
+print(test)
+print(len(ps))
+print(len(gs)/3)
+"""
