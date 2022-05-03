@@ -1,13 +1,10 @@
+#!/usr/bin/python3.7.9
 # -*- coding: utf-8 -*-
-#!/usr/bin/python3
 
 """
 Created on Thu Apr 28 11:05:49 2022
-This is the business logic API.  This script contains functions that allow the frontend to gather a list of all entries from the database layer,
-perform searches of the database layer and specify testing for restriction enzyme sites (also retrieving a list of the available restriction enzymes), 
-open a pre-calculated data file of codon useage within the database.
-
-@author: angli - modified from the original template provided in the skeleton code
+This is the business logic API, containing 4 of the 5 business layer functions that may be required by the front end.
+@author: angli
 """
 
 # Add the bl sub-directory to the module path (for testing this routine)
@@ -15,12 +12,14 @@ open a pre-calculated data file of codon useage within the database.
 import sys
 sys.path.insert(0, "../db/")
 sys.path.insert(0, "../")
+sys.path.insert(0, "../bl/")
 import dbapi   # Import the database api
 
 def frontend_input(request):
     """
-    This function takes a 3 or 4 item iterable object (tuple or list)
-    with format: (searchfield, data_type, rest_enzyme_flag, rest_enzyme_name)
+    This function takes a 3 or 4 item iterable object (tuple or list), using the information to perform a search and carry out necessary processing to present data back to the front end.
+    
+    The input should be of format: (searchfield, data_type, rest_enzyme_flag, rest_enzyme_name)
         searchfield - string object
         data_type - string object of options "gene_id", "gen_acc", "prot_prod" or "chro_loc" - corresponding to the type of search data
         rest_enzyme_flag - boolean (True/False)
@@ -29,11 +28,12 @@ def frontend_input(request):
     Returns
     -------
     Dictionary with the following structure for key:value pair:
-        {index:([Gene name, Accession, Protein product name, Chromosomal location],[raw DNA sequence, Exon locations], alignment, codon_data, renzyme_output)}        
-        index 0->x (number of entries returned)
+        {index:([Gene name, Accession, Protein product name, Chromosomal location],[raw DNA sequence, Exon locations], alignment, codon_data, renzyme_output)} 
+        
+        index 0->x (number of entries returned, this is also the dictionary key) 
         Gene name - string - dictionary key
         [Accession, Protein product name, Chromosomal location] - 3 item list of string objects
-        [raw DNA sequence, Exon locations] - 2 item list, of string oject and list of tuples (of length 1->x)
+        [raw DNA sequence, Exon locations] - 2 item list, of string object and list of tuples ()
         alignment - list of tuples with of (Amino acid, codon) pairing.  An error message is returned if alignment fails
         codon_data - dictionary of codon useage in format {codon:(number_of_occurances, amino_acid_letter, codon_use_perc)}
             codon - str - three letter codon
@@ -57,7 +57,7 @@ def frontend_input(request):
     if rest_enzyme_flag == 1:
         rest_enzyme_name = request[3]
 
-    import db_API
+    import db_api
 
     temp_data = []
 
@@ -66,21 +66,21 @@ def frontend_input(request):
 
         temp_data = db_API.getgeneentries(searchfield)
        # From db_api_dummy:
-       # db_API.getgeneentries
+       # db_api.getgeneentries
        # ["db_gene_id", "db_accession_code", "db_product", "db_location", "db_translation", "db_dna_seq"]
        # Assumption that this will return a list of lists
                        
        """
        This section of code should go on to include information stored from the cds sections associated with each gene entry
        With appropriate appending to each list entry within "temp_data".
-       An idealised solution will be to call an additional DB_API function to :
-           1. Recieve exon_locations as a list of tuples oif format [("string", "string"), ("string","string")...]
+       An idealised solution will be to call an additional db_api function to :
+           1. Recieve exon_locations as a list of tuples of format [("string", "string"), ("string","string")...]
            2. Comp_strand as a boolean object
            3. Codon_start as integer
        """
     # Search by accession number
     if data_type == "gen_acc":
-        temp_data = db_API.sequence(searchfield)
+        temp_data = db_api.sequence(searchfield)
         #["db_gene_id", "db_accession_code", "db_product", "db_location", "db_translation", "db_dna_seq"]
         """
         As per description for the search by gene_id, this would have duplicated code to ensure that the appropriate db_api functions were called
@@ -90,7 +90,7 @@ def frontend_input(request):
     # Search by protein product
     if data_type == "prot_prod":
         # to complete once db_api updated
-        temp_data = db_API."functionname"(searchfield)
+        temp_data = db_api."functionname"(searchfield)
         """
         As per description for the search by gene_id, this would have duplicated code to ensure that the appropriate db_api functions were called
         and appropriately joined.
@@ -98,7 +98,7 @@ def frontend_input(request):
     # Search by chromosome location
     if data_type == "chro_loc":
         # to complete once db_api updated
-        temp_data = db_API."functionname"(searchfield)
+        temp_data = db_api."functionname"(searchfield)
         """
         As per description for the search by gene_id, this would have duplicated code to ensure that the appropriate db_api functions were called
         and appropriately joined.
@@ -152,6 +152,7 @@ def getAllEntries():
     -------
     From db_API: [('accession', 'gene', 'protein_id', 'sequence', 'aa_seq', 'chromosomal location')]
     """
+    import db_api
     return(db_api.all_genebank())
 
 # ------------------------------------------
