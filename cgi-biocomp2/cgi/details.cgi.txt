@@ -1,0 +1,254 @@
+#!/usr/bin/env python3
+
+import cgi;
+
+# Useful debugging output
+import cgitb
+cgitb.enable()  # Send errors to browser
+# cgitb.enable(display=0, logdir="/path/to/logdir") # log errors to a file
+
+#Note: I have written this cgi script on the assumption that searching for gene_id only brings up one entry. This is a dodgy assumption, but I am rushing to finish. 
+# The next few lines are commented out, but they are what I would write if I could get cgi.Fieldstorage to work. I got key errors even when I was just copying Dr Martin's solutions from the first cgi practical
+
+#form = cgi.FieldStorage()
+
+#term    = form["term"].value
+#method     = form["method"].value
+#r_enz = form["r_enz"].value
+
+#hardcoding these values: 
+term = "ABCB1"
+method = 'gene_id'
+r_enz = 'ecor1'
+
+#formatting input to be of the form required by frontend_input, which is (searchfield, data_type, rest_enzyme_flag, rest_enzyme_name)
+r_flag = True
+r_name = r_enz
+if r_enz == 'none': 
+    r_flag = False
+    r_name = ""
+
+
+ 
+#If I weren't writing dummy code, I would import this function from the module blapi_real.py
+def frontend_input(searchfield, data_type, rest_enzyme_flag, rest_enzyme_name):
+    """
+    This is a dummy version of the function used to make a functional webpage.
+    Input: (searchfield, data_type, rest_enzyme_flag, rest_enzyme_name)
+    Returns: {index:([Gene name, Accession, Protein product name, Chromosomal location],[raw DNA sequence, Exon locations], alignment, codon_data, renzyme_output)}  
+    -------
+    """   
+    entries = {0: (['ABCB1', 'HQ291662', 'multidrug resistance protein 1', '7q21.12'], ['ctgcttgatggcaaagaaataaagcgactgaatgttcagtggctccgagcacacctgggcatcgtgtcccaggagcccatcctgtttgactgcagcattgctgagaacattgcctatggagacaacagccgggtggtgtcacaggaagagatcgtgagggcagcaaaggaggccaacatacatgccttcatcgagtcactgcctaat', [(6,12),(100,150)]], [('L', 'CTG'), ('L', 'CTT'), ('D', 'GAT'), ('G', 'GGC'), ('K', 'AAA'), ('E', 'GAA'), ('I', 'ATA'), ('K', 'AAG'), ('R', 'CGA'), ('L', 'CTG'), ('N', 'AAT'), ('V', 'GTT'), ('Q', 'CAG'), ('W', 'TGG'), ('L', 'CTC'), ('R', 'CGA'), ('A', 'GCA'), ('H', 'CAC'), ('L', 'CTG'), ('G', 'GGC'), ('I', 'ATC'), ('V', 'GTG'), ('S', 'TCC'), ('Q', 'CAG'), ('E', 'GAG'), ('P', 'CCC'), ('I', 'ATC'), ('L', 'CTG'), ('F', 'TTT'), ('D', 'GAC'), ('C', 'TGC'), ('S', 'AGC'), ('I', 'ATT'), ('A', 'GCT'), ('E', 'GAG'), ('N', 'AAC'), ('I', 'ATT'), ('A', 'GCC'), ('Y', 'TAT'), ('G', 'GGA'), ('D', 'GAC'), ('N', 'AAC'), ('S', 'AGC'), ('R', 'CGG'), ('V', 'GTG'), ('V', 'GTG'), ('S', 'TCA'), ('Q', 'CAG'), ('E', 'GAA'), ('E', 'GAG'), ('I', 'ATC'), ('V', 'GTG'), ('R', 'AGG'), ('A', 'GCA'), ('A', 'GCA'), ('K', 'AAG'), ('E', 'GAG'), ('A', 'GCC'), ('N', 'AAC'), ('I', 'ATA'), ('H', 'CAT'), ('A', 'GCC'), ('F', 'TTC'), ('I', 'ATC'), ('E', 'GAG'), ('S', 'TCA'), ('L', 'CTG'), ('P', 'CCT'), ('N', 'AAT')], {'ATT': (2, 'I', 2.898550724637681), 'ATC': (4, 'I', 5.797101449275362), 'ATA': (2, 'I', 2.898550724637681), 'CTT': (1, 'L', 1.4492753623188406), 'CTC': (1, 'L', 1.4492753623188406), 'CTA': (0, 'L', 0.0), 'CTG': (5, 'L', 7.246376811594203), 'TTA': (0, 'L', 0.0), 'TTG': (0, 'L', 0.0), 'GTT': (1, 'V', 1.4492753623188406), 'GTC': (0, 'V', 0.0), 'GTA': (0, 'V', 0.0), 'GTG': (4, 'V', 5.797101449275362), 'TTT': (1, 'F', 1.4492753623188406), 'TTC': (1, 'F', 1.4492753623188406), 'ATG': (0, 'M', 0.0), 'TGT': (0, 'C', 0.0), 'TGC': (1, 'C', 1.4492753623188406), 'GCT': (1, 'A', 1.4492753623188406), 'GCC': (3, 'A', 4.3478260869565215), 'GCA': (3, 'A', 4.3478260869565215), 'GCG': (0, 'A', 0.0), 'GGT': (0, 'G', 0.0), 'GGC': (2, 'G', 2.898550724637681), 'GGA': (1, 'G', 1.4492753623188406), 'GGG': (0, 'G', 0.0), 'CCT': (1, 'P', 1.4492753623188406), 'CCC': (1, 'P', 1.4492753623188406), 'CCA': (0, 'P', 0.0), 'CCG': (0, 'P', 0.0), 'ACT': (0, 'T', 0.0), 'ACC': (0, 'T', 0.0), 'ACA': (0, 'T', 0.0), 'ACG': (0, 'T', 0.0), 'TCT': (0, 'S', 0.0), 'TCC': (1, 'S', 1.4492753623188406), 'TCA': (2, 'S', 2.898550724637681), 'TCG': (0, 'S', 0.0), 'AGT': (0, 'S', 0.0), 'AGC': (2, 'S', 2.898550724637681), 'TAT': (1, 'Y', 1.4492753623188406), 'TAC': (0, 'Y', 0.0), 'TGG': (1, 'W', 1.4492753623188406), 'CAA': (0, 'Q', 0.0), 'CAG': (3, 'Q', 4.3478260869565215), 'AAT': (2, 'N', 2.898550724637681), 'AAC': (3, 'N', 4.3478260869565215), 'CAT': (1, 'H', 1.4492753623188406), 'CAC': (1, 'H', 1.4492753623188406), 'GAA': (2, 'E', 2.898550724637681), 'GAG': (5, 'E', 7.246376811594203), 'GAT': (1, 'D', 1.4492753623188406), 'GAC': (2, 'D', 2.898550724637681), 'AAA': (1, 'K', 1.4492753623188406), 'AAG': (2, 'K', 2.898550724637681), 'CGT': (0, 'R', 0.0), 'CGC': (0, 'R', 0.0), 'CGA': (2, 'R', 2.898550724637681), 'CGG': (1, 'R', 1.4492753623188406), 'AGA': (0, 'R', 0.0), 'AGG': (1, 'R', 1.4492753623188406), 'TAA': (0, 'Stop', 0.0), 'TAG': (0, 'Stop', 0.0), 'TGA': (0, 'Stop', 0.0)},  ({'ecor1': [(30, 75), 0]}, [('ecor1', 0)]))}
+    return(entries)
+
+def make_table(var): 
+    """
+    Function that makes a table when given a list of lists. 
+    Input: a list of lists
+    Output: lines of html
+    """
+    code = "<p>| Gene ID | Genbank accession | Protein product | chromosome location |</p>\n"
+    
+    for row in var: 
+        line = "<p>|"
+        for term in row: 
+            line += " " + term + " |"
+        line += "</p>\n"
+        code += line
+    
+    return(code)
+
+def make_table_usage(var): 
+    """
+    Function that makes table a showing codon usage when given a list of lists. 
+    Input: a list of lists
+    Output: lines of html
+    """
+    code = "<p>| Codon | Occurence | Amino acid | Percentage |</p>\n"
+    
+    for row in var: 
+        line = "<p>|"
+        for term in row: 
+            line += " " + str(term) + " |"
+        line += "</p>\n"
+        code += line
+    
+    return(code)
+def add_coding(terms, sites): 
+    """Adds highlighting to coding region:
+    Input: terms is list of tuples, or 2 item lists, sites in the form of list of tuples of ints
+    Note: html won't function if there is overlap of coding regions
+    Note: business layer includes < and > in some of the test date for the coding region locations.
+    But in the interest of getting something to submit before the deadline, I am assuming that these aren't present
+    Note: some info is lost because I am highlighting the triplets rather than the specific regions.
+    But at this point I just want my functions to exist
+    Output: list of 2 item lists
+    """
+    #convert tuples to lists so they are mutable 
+    terms_list = [list(term) for term in terms]
+    for pair in sites:
+        #get location from referring to full sequence to triplit pairs instead
+        start = pair[0]//3
+        end = pair[1]//3
+        start_codon = terms_list[start]
+        #do the highlighting
+        start_codon[0] = "<mark>" + start_codon[0]
+        start_codon[1] = "<mark>" + start_codon[1]
+    
+      
+        
+        end_codon = terms_list[end]
+        end_codon[0] = end_codon[0] + "</mark>"
+        end_codon[1] = end_codon[1] + "</mark>"
+        
+        terms_list[start] = start_codon
+        terms_list[end] = end_codon
+    
+    return terms_list
+def add_restriction(terms, pair): 
+    """Adds underlining to coding region:
+    Input: terms is list of tuples, or 2 item lists, pair is a tuple of ints
+    Note: html won't function if there is overlap of coding regions
+    Note: Data must be processed from front end input before this function is run
+    Output: list of 2 item lists
+    Note: some info is lost because I am highlighting the triplets rather than the specific regions.
+    But at this point I just want my functions to exist
+    """
+    #convert tuples to lists so they are mutable 
+    terms_list = [list(term) for term in terms]
+    #get location from referring to full sequence to triplit pairs instead
+    start = pair[0]//3
+    end = pair[1]//3
+    start_codon = terms_list[start]
+    #do the highlighting
+    start_codon[0] = "<u>" + start_codon[0] 
+    start_codon[1] = "<u>" + start_codon[1]
+    
+      
+        
+    end_codon = terms_list[end]
+    end_codon[0] = end_codon[0] + "</u>"
+    end_codon[1] = end_codon[1] + "</u>"
+        
+    terms_list[start] = start_codon
+    terms_list[end] = end_codon
+    
+    return terms_list
+def gene_browser (terms):
+    """This function formats the gene for viewing in html
+    Input: list of tuples, or 2 item lists
+    Output: block of html text
+    Ideally, the html would be in a monowidth font
+    """
+    aminos = [str(term[0]) for term in terms]
+    triplets = [str(term[1]) for term in terms]
+    
+    t_string = "<p>"
+    for t in triplets: 
+        t_string += " " + t + " "
+    t_string += "</p>\n"
+    a_string = "<p>"
+    for a in aminos: 
+        a_string += "  " + a + "  "
+    a_string += "</p>\n"
+    html_block = a_string + t_string
+    return html_block
+    
+results = frontend_input(term,method,r_flag,r_name)
+*key_list, = results
+#make table showing summary info
+gen_info = []
+for k in key_list: 
+    info = results[k][0]
+    gen_info.append(info)
+    
+test_v = gen_info[0][0]
+table = make_table(gen_info)
+
+#extract exons: 
+for k in key_list: 
+    exon_tuples = results[k][1][1]
+
+#extract restriction info
+#Note that I edited the 
+for k in key_list: 
+    r_info = results[k][4]
+#r_dict has where the restriction sites are
+r_dict = r_info[0]
+# get restriction enzymes
+*r_keys, = r_dict
+enzymes_line = "<p> List of restriction enzymes used:"
+for r_k in r_keys: 
+    enzymes_line += " " + r_k
+enzymes_line += "</p>\n"
+#r flag says if it's a good enzyme or not. Note: In the business layer API it says r_flag is a dictionary, but in the test data Ang sent me it's a list. I have left it as a list in my test data.
+r_flag = r_info[1]
+
+
+#see if enzyme is a good candidate for excising coding regions
+enz_good = ""
+for enz in r_flag: 
+    if enz[1] == 0: 
+        enz_g = "<p>" + enz[0] + " is suitable to isolate exons. </p>\n"
+        enz_good += enz_g
+    else:
+        enz_g = "<p>" + enz[0] + " is not suitable to isolate exons. </p>\n"
+        enz_good += enz_g
+    
+#get name of enzymes:
+*enzymes, = r_dict
+#extract alignment: 
+for k in key_list: 
+    alignment_tuples = results[k][2]
+#extract exon regions
+exon_alignment = add_coding(alignment_tuples,exon_tuples)
+#start indicating restriction sites
+for rkey in r_keys: 
+    r_list = r_dict[rkey]
+    if r_list[1] == 0 or r_list[1] == 1: 
+        r_tuple = r_list[0]
+        r_alignment = add_restriction(exon_alignment,r_tuple)
+    else: 
+        r_alignment = exon_alignment
+#make alignment
+alignment = gene_browser(r_alignment)    
+#make table showing codon usage
+
+for k in key_list: 
+    use_info = results[k][3]
+key_list2 = use_info.keys()
+list_list = [[key] + list(use_info[key]) for key in key_list2]
+
+use_table = make_table_usage(list_list)
+# Print the HTML MIME-TYPE header
+print ("Content-Type: text/html\n")
+
+
+html = "<html>\n"
+html += "<head>\n"
+
+html += "<title>Details of " + term + "</title>\n"
+html += "</head>\n\n"
+
+html += "<body>\n"
+
+
+html += "<h2>Details Page for " + term + "</h2>\n"
+html += "<h3>Summary Information</h3>"
+html += table
+html += "<h3>Amino Acid and Codons</h3>"
+html += "<p>Exons are highlighted.</p>\n"
+html += "<p>Regions targeted by restriction enzymes are underlined</p>"
+html += enzymes_line
+html += alignment
+html += enz_good
+html += "<h3>Codon Usage</h3>"
+html += use_table
+html += "</body>\n"
+html += "</html>\n"
+
+
+print (html)
+
+
+
