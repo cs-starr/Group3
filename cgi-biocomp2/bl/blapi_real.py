@@ -22,7 +22,7 @@ def frontend_input(request):
     The input should be of format: (searchfield, data_type, rest_enzyme_flag, rest_enzyme_name)
         searchfield - string object
         data_type - string object of options "gene_id", "gen_acc", "prot_prod" or "chro_loc" - corresponding to the type of search data
-        rest_enzyme_flag - boolean (True/False)
+        rest_enzyme_flag - boolean - indicating whether restriction enzyme search is required.
         rest_enzyme_name - string object (Optional)
 
     Returns
@@ -31,10 +31,10 @@ def frontend_input(request):
         {index:([Gene name, Accession, Protein product name, Chromosomal location],[raw DNA sequence, Exon locations], alignment, codon_data, renzyme_output)} 
         
         index 0->x (number of entries returned, this is also the dictionary key) 
-        Gene name - string - dictionary key
-        [Accession, Protein product name, Chromosomal location] - 3 item list of string objects
+        
+        [Gene name, Accession, Protein product name, Chromosomal location] - 4 item list of string objects
         [raw DNA sequence, Exon locations] - 2 item list, of string object and list of tuples ()
-        alignment - list of tuples with of (Amino acid, codon) pairing.  An error message is returned if alignment fails
+        alignment - list of tuples with of (Amino acid, codon) pairing.  This will terminate early if a mismatch is detected.
         codon_data - dictionary of codon useage in format {codon:(number_of_occurances, amino_acid_letter, codon_use_perc)}
             codon - str - three letter codon
             number_of_occurances - int
