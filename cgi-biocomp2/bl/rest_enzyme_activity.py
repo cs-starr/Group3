@@ -1,5 +1,5 @@
+#!/usr/bin/python3.7.9
 # -*- coding: utf-8 -*-
-#!/usr/bin/python3
 """
 Created on Fri Apr 29 14:50:43 2022
 This function searches a genetic sequence for restriction enzyme activity and identifieds enzymes
@@ -10,6 +10,9 @@ with activity outside of the exon start/stop region.
 def rest_enzyme_activity(dna_seq, rest_enzyme, input_exon_locations):
 
     """
+    This function searches a genetic sequence for restriction enzyme activity and identifieds enzymes
+    with activity outside of the exon start/stop region.
+    
     Inputs
     -------
     genetic sequence - str
@@ -21,21 +24,21 @@ def rest_enzyme_activity(dna_seq, rest_enzyme, input_exon_locations):
     Returns a tuple of 2 dictionaries
        enzyme_activity_dict - {enzyme_name :[(start, stop), midcut]}
            enzyme_name - str
-           (start,stop) - int (if activity in overall sequence), otherwise returns str ("No","activity")
-           midcut - int (0 - no mid exon cut, 1 - mid exon cut, 2 - no activity on DNA strand) - specific to the (start,stop) site
+           (start,stop) - if there is restriction enzyme activity, this is a match.span() object - true index in (a, b) is (a, b-1), otherwise returns ("No","activity") with both items as str
+           midcut - int - (0 - no mid exon cut, 1 - mid exon cut, 2 - no activity on DNA strand) - specific to the (start,stop) site
        interference_output - {enzyme_name:overall_midcut}
            overall_midcut - int (0 - activity present on DNA strand but suitable to isolate exons, 1 - enzyme not suitable to isolate exons)
     """
     
-    """
-    Additional notes
-    EcoR1- forward GAATTC, complementary CTTAAG
-    BAMH1 - forward GGATCC, complementary CCTAGG
-    BsuM - forward CTCGAG, complementary CTCGAG
-    Most restriction enzymes are palindromes, therefore no need to specify/search on complementary strand based on entry requirements.
-    Modifications to code may be required fro non palindromic REs
-    """
-    import re
+    
+   # Additional notes
+   # EcoR1- forward GAATTC, complementary CTTAAG
+   # BAMH1 - forward GGATCC, complementary CCTAGG
+   # BsuM - forward CTCGAG, complementary CTCGAG
+   # Most restriction enzymes are palindromes, therefore no need to specify/search on complementary strand based on entry requirements.
+   # Modifications to code may be required fro non palindromic REs
+   import re
+    
     enzyme_target_seq = []
     if rest_enzyme == "ecor1":
         enzyme_target_seq.append(("gaattc", "ecor1"))
@@ -57,8 +60,8 @@ def rest_enzyme_activity(dna_seq, rest_enzyme, input_exon_locations):
         matched_loc = re.finditer(e_seq, dna_seq)
         rest_enzyme_locations=[]
         for loc in matched_loc:
-            rest_enzyme_locations.append(loc.span()) #tuples
-    
+            rest_enzyme_locations.append(loc.span()) #tuples of start/stop locations. As per match_object.span(), the true index in (a, b) is (a, b-1)
+        # Detecting for no restriction enzyme sites for the specified enzyme
         if len(rest_enzyme_locations) != 0:
             exon_locations = []
             for (start,stop) in input_exon_locations:
@@ -74,7 +77,8 @@ def rest_enzyme_activity(dna_seq, rest_enzyme, input_exon_locations):
                 
             exon_start_boundary = min(exon_locations[0])
             exon_stop_boundary = max(exon_locations[1])         
-                
+            
+            #Logical if, elif gates to sort individual restriction enzyme sites into upstream/downstream, or within coding region.
             enz_store = []    
             for (enzyme_start,enzyme_stop) in rest_enzyme_locations:
                 if (enzyme_start < exon_start_boundary and enzyme_stop < exon_start_boundary):
@@ -89,6 +93,7 @@ def rest_enzyme_activity(dna_seq, rest_enzyme, input_exon_locations):
             enz_store=[(("No","activity"),2)]
             enzyme_activity_dict[e_name] = enz_store #expand on if no match found
     
+    #Using a counter to calculate whether there is unwanted restriction activity, or lack of activity.
     interference_output = []
     for (e_seq, e_name) in enzyme_target_seq:
         Exon_interefence = 0
@@ -113,6 +118,6 @@ t = (rest_enzyme_activity(dns, rest_enz, iel))
 print(t[0],t[1])
 m = (rest_enzyme_activity(dns2, rest_enz, iel))
 print(m[0],m[1])
-q = (rest_enzyme_activity(dns2, rest_enz, iel))
+q = (rest_enzyme_activity(dns2, rest_enz2, iel))
 print(q[0],q[1])
 """
